@@ -1,19 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { killers } from '$lib/data/killers';
 
-type Killer = {
-	id: string;
-	name: string;
-	altNames: string[];
-	sex: string;
-	speed: number[];
-	height: string;
-	terrorRadius: number[];
-	attackType: string[];
-	origin: string;
-	releaseYear: number;
-};
-
 const correctKillerName = 'Mastermind';
 const correctKiller = killers.find((killer) => killer.id === correctKillerName.toLowerCase());
 if (!correctKiller) {
@@ -47,15 +34,20 @@ export const POST: RequestHandler = async ({ request }) => {
 			terrorRadius: compareArrayStat(guessedKiller.terrorRadius, correctKiller.terrorRadius),
 			attackType: compareArrayStat(guessedKiller.attackType, correctKiller.attackType),
 			origin: guessedKiller.origin === correctKiller.origin ? 'correct' : 'incorrect',
-			releaseYear: guessedKiller.releaseYear === correctKiller.releaseYear ? 'correct' : 'incorrect'
+			releaseYear:
+				guessedKiller.releaseYear === correctKiller.releaseYear
+					? 'correct'
+					: guessedKiller.releaseYear > correctKiller.releaseYear
+						? 'earlier'
+						: 'later',
 		},
-		isCorrect: guessedKiller.id === correctKiller?.id
+		isCorrect: guessedKiller.id === correctKiller?.id,
 	};
 
 	return new Response(JSON.stringify(result), {
 		status: 200,
 		headers: {
-			'Content-Type': 'application/json'
-		}
+			'Content-Type': 'application/json',
+		},
 	});
 };

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { scale } from 'svelte/transition';
 	import { killers } from '$lib/data/killers';
 	import type { KillerBlind, KillerResponse } from '$lib/types';
 
@@ -9,13 +10,51 @@
 	if (!guessedKiller) {
 		throw new Error(`Killer with ID ${guessed} not found`);
 	}
-	console.log(`Guessed: ${guessedKiller}`);
+
+	let mounted = false;
+	let delayBase = 300;
+
+	console.log(serverResponse.stats.releaseYear);
+
+	const releaseYearDiff =
+		serverResponse.stats.releaseYear === 'earlier'
+			? '↓'
+			: serverResponse.stats.releaseYear === 'later'
+				? '↑'
+				: '';
+
+	const answers = [
+		{ val: guessedKiller.name, status: serverResponse.name },
+		{ val: guessedKiller.sex, status: serverResponse.stats.sex },
+		{
+			val: guessedKiller.terrorRadius.map((t) => `${t}m`).join('m, '),
+			status: serverResponse.stats.terrorRadius,
+		},
+		{
+			val: guessedKiller.speed.map((s) => `${s}m/s`).join(', '),
+			status: serverResponse.stats.speed,
+		},
+		{ val: guessedKiller.attackType.join(', '), status: serverResponse.stats.attackType },
+		{ val: guessedKiller.height, status: serverResponse.stats.height },
+		{ val: guessedKiller.origin, status: serverResponse.stats.origin },
+		{
+			val: `${guessedKiller.releaseYear} ${releaseYearDiff}`,
+			status: serverResponse.stats.releaseYear,
+		},
+	];
+
+	import { onMount } from 'svelte';
+	onMount(() => {
+		mounted = true;
+	});
 
 	const setBg = (indicator: string) => {
 		switch (indicator) {
 			case 'correct':
 				return 'bg-green-500';
 			case 'incorrect':
+			case 'earlier':
+			case 'later':
 				return 'bg-red-500';
 			case 'partial':
 				return 'bg-orange-400';
@@ -24,38 +63,19 @@
 </script>
 
 <tr>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.name)}`}
-		>{guessedKiller.name}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.sex)}`}
-	>
-		{guessedKiller.sex}
-	</td>
-
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.terrorRadius)}`}
-		>{guessedKiller.terrorRadius.map((t) => `${t}m`).join('m, ')}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.speed)}`}
-		>{guessedKiller.speed.map((s) => `${s}m/s`).join(', ')}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.attackType)}`}
-		>{guessedKiller.attackType.join(', ')}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.height)}`}
-		>{guessedKiller.height}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.origin)}`}
-		>{guessedKiller.origin}</td
-	>
-	<td
-		class={`h-16 w-16 border rounded text-center text-xs font-bold text-white ${setBg(serverResponse.stats.releaseYear)}`}
-		>{guessedKiller.releaseYear}</td
-	>
+	{#each answers as cell, i (i)}
+		{#if mounted}
+			<td
+				in:scale={{ delay: i * delayBase, duration: 200 }}
+				class={`h-16 w-16 rounded border text-center text-xs font-bold text-white ${setBg(cell.status)}`}
+			>
+				{cell.val}
+				{#if i === answers.length - 1 && releaseYearDiff}
+					<span class="pointer-events-none absolute top-1 right-1 text-sm opacity-40">
+						{releaseYearDiff}
+					</span>
+				{/if}
+			</td>
+		{/if}
+	{/each}
 </tr>

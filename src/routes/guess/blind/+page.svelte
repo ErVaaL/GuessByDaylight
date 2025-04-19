@@ -1,25 +1,41 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { killers } from '$lib/data/killers';
 	import axios from 'axios';
-	import SuggestionList from '../../../components/blind/SuggestionList.svelte';
 	import type { KillerResponse } from '$lib/types';
 	import GuessResult from '../../../components/blind/GuessResult.svelte';
+	import GuessingInput from '../../../components/blind/GuessingInput.svelte';
 
 	type Killer = {
 		name: string;
 		altNames: string[];
 	};
 
-	let input = '';
+	const headers = [
+		{ val: 'Name' },
+		{ val: 'Sex' },
+		{ val: 'Terror Radius' },
+		{ val: 'Speed' },
+		{ val: 'Attack Type' },
+		{ val: 'Height' },
+		{ val: 'Origin' },
+		{ val: 'Release Year' },
+	];
+
 	let guesses: KillerResponse[] = [];
 
 	const killerMatches: Killer[] = killers.map((killer) => ({
 		name: killer.name,
-		altNames: killer.altNames
+		altNames: killer.altNames,
 	}));
 
-	async function submitGuess() {
+	$: guessedKillerIds = guesses.map((guess) => guess.name.toLowerCase());
+
+	$: excludedKillers = killerMatches.filter(
+		(killer) => !guessedKillerIds.includes(killer.name.toLowerCase())
+	);
+
+	const submitGuess = async (input: string) => {
+		if (!input) return;
 		try {
 			const res = await axios.post('/api/guess', { guess: input.toLowerCase().trim() });
 			const data = res.data;
@@ -32,46 +48,19 @@
 				console.error('Unexpected error:', error);
 			}
 		}
-	}
+	};
 </script>
 
 <div class="flex justify-center">
 	<div class="flex min-h-screen w-4xl flex-col items-center gap-y-10 bg-[rgba(0,0,0,0.7)]">
 		<h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
-		<div class="flex justify-center gap-1">
-			<div class="flex flex-col">
-				<input
-					type="text"
-					bind:value={input}
-					placeholder="Enter your guess"
-					class="my-4 h-10 w-64 rounded-lg bg-gray-600 p-2 text-white"
-				/>
-				<SuggestionList
-					killers={killerMatches}
-					query={input}
-					onSelect={(name) => {
-						input = name;
-						submitGuess();
-					}}
-				/>
-			</div>
-
-			<button
-				class="my-4 h-10 w-10 rounded-lg bg-gray-600 transition-all duration-150 hover:cursor-pointer hover:bg-gray-800"
-				on:click={submitGuess}>→</button
-			>
-		</div>
+		<GuessingInput killers={excludedKillers} {submitGuess} />
 		<table class="table-fixed border-separate border-spacing-2">
 			<thead class="">
 				<tr class="">
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Name</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Sex</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Terror Radius</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Speed</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Attack Type</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Height</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Origin</th>
-					<th class="h-16 w-16 border-b text-center text-sm font-bold ">Release Year</th>
+					{#each headers as header (header.val)}
+						<th class="h-16 w-16 border-b text-center text-sm font-bold">{header.val}</th>
+					{/each}
 				</tr>
 			</thead>
 			<tbody>
