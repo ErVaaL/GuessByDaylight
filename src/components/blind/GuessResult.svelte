@@ -5,6 +5,7 @@
 
 	export let guessed: string;
 	export let serverResponse: KillerResponse;
+	export let onDoneReveal: () => void = () => {};
 
 	const guessedKiller: KillerBlind = killers.find((killer) => killer.id === guessed.toLowerCase())!;
 	if (!guessedKiller) {
@@ -13,8 +14,6 @@
 
 	let mounted = false;
 	let delayBase = 300;
-
-	console.log(serverResponse.stats.releaseYear);
 
 	const releaseYearDiff =
 		serverResponse.stats.releaseYear === 'earlier'
@@ -68,6 +67,11 @@
 			<td
 				in:scale={{ delay: i * delayBase, duration: 200 }}
 				class={`h-16 w-16 rounded border text-center text-xs font-bold text-white ${setBg(cell.status)}`}
+				on:introend={() => {
+					if (serverResponse.isCorrect && i === answers.length - 1) {
+						onDoneReveal();
+					}
+				}}
 			>
 				{cell.val}
 				{#if i === answers.length - 1 && releaseYearDiff}
