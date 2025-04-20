@@ -4,8 +4,11 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
+	import EmoteGuessResult from '../../../components/emotes/EmoteGuessResult.svelte';
+	import { goto } from '$app/navigation';
 
 	let emojiTable: string[] = [];
+	let revealDone = false;
 
 	const fromUnicodeToEmoji = (code: string) => {
 		return String.fromCodePoint(parseInt(code.replace('U+', ''), 16));
@@ -39,4 +42,24 @@
 		</div>
 	{/each}
 </div>
-<GuessingInput killers={$excludedKillers} {submitGuess} />
+{#if !$hasCompletedToday}
+	<GuessingInput killers={$excludedKillers} {submitGuess} />
+{:else if revealDone || $hasCompletedToday}
+	<button
+		class="mt-4 h-12 w-40 rounded-lg bg-green-600 font-bold text-white transition hover:bg-green-700"
+		on:click={() => goto('/guess/perk-survivor')}
+	>
+		Next game →
+	</button>
+{/if}
+<div class="flex flex-col-reverse gap-y-2">
+	{#each $guesses as guess (guess.guess)}
+		<EmoteGuessResult
+			guessed={guess.guess}
+			serverResponse={guess}
+			onDoneReveal={() => {
+				revealDone = true;
+			}}
+		/>
+	{/each}
+</div>
