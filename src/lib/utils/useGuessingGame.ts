@@ -12,7 +12,7 @@ type UseGuessingGameOptions = {
 };
 
 export const useGuessingGame = (options: UseGuessingGameOptions) => {
-	const guesses: Writable<string[]> = writable([]);
+	const guesses: Writable<KillerResponse[]> = writable([]);
 	const hasCompletedToday: Writable<boolean> = writable(false);
 
 	const today = new Date().toISOString().split('T')[0];
@@ -40,7 +40,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		const res = await axios.post(options.apiEndpoint, { guess: guess.toLowerCase().trim() });
 		const data: KillerResponse = res.data;
 		guesses.update((prev) => {
-			const updated = [...prev, guess];
+			const updated = [...prev, data];
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
 				localStorage.setItem(options.storageKey, JSON.stringify(updated));

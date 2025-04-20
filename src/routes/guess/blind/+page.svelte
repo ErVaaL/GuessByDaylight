@@ -5,6 +5,7 @@
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
 	import { loading } from '$lib/stores/loading';
+	import { onMount } from 'svelte';
 
 	type Killer = {
 		name: string;
@@ -46,7 +47,9 @@
 		(k) => !guessedKillerIds.includes(k.name.toLowerCase())
 	);
 
-	$: loading.set(false);
+	onMount(() => {
+		loading.set(false);
+	});
 </script>
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
@@ -75,7 +78,7 @@
 				guessed={guess.guess}
 				serverResponse={guess}
 				onDoneReveal={() => {
-					if (guess.isCorrect) revealDone = true;
+					revealDone = true;
 				}}
 			/>
 		{/each}
