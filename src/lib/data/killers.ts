@@ -10,13 +10,13 @@ export const killers = [
 		height: 'Tall',
 		origin: 'American',
 		releaseYear: 2016,
-		emotes: [],
+		emotes: ['', '', ''],
 		terrorRadiusSound: [
 			'/music/default_far.mp3',
 			'/music/default_mid.mp3',
 			'/music/default_close.mp3',
-			'/music/default_chase.mp3'
-		]
+			'/music/default_chase.mp3',
+		],
 	},
 	{
 		id: 'wraith',
@@ -29,13 +29,13 @@ export const killers = [
 		height: 'Tall',
 		origin: 'Nigerian',
 		releaseYear: 2016,
-		emotes: [],
+		emotes: ['', '', ''],
 		terrorRadiusSound: [
 			'/music/default_far.mp3',
 			'/music/default_mid.mp3',
 			'/music/default_close.mp3',
-			'/music/default_chase.mp3'
-		]
+			'/music/default_chase.mp3',
+		],
 	},
 	{
 		id: 'mastermind',
@@ -48,12 +48,12 @@ export const killers = [
 		height: 'Average',
 		origin: 'American',
 		releaseYear: 2022,
-		emotes: [],
+		emotes: ['U+1F3C3 U+1F3FC U+200D U+2642 U+FE0F', 'U+1F576 U+FE0F', 'U+1F52A'],
 		terrorRadiusSound: [
 			'/music/mastermind_far.mp3',
 			'/music/mastermind_mid.mp3',
 			'/music/mastermind_close.mp3',
-			'/music/mastermind_chase.mp3'
-		]
-	}
+			'/music/mastermind_chase.mp3',
+		],
+	},
 ];
