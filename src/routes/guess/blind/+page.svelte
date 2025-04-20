@@ -1,21 +1,14 @@
 <script lang="ts">
-	import { killers } from '$lib/data/killers';
 	import { goto } from '$app/navigation';
-	import GuessResult from '../../../components/blind/GuessResult.svelte';
+	import BlindGuessResult from '../../../components/blind/BlindGuessResult.svelte';
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
+	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
 	import { loading } from '$lib/stores/loading';
 	import { onMount } from 'svelte';
 
-	type Killer = {
-		name: string;
-		altNames: string[];
-	};
-
-	//TODO fix up the types so there are no warnings
-
 	const { guesses, hasCompletedToday, submitGuess } = useGuessingGame({
-		apiEndpoint: '/api/guess',
+		apiEndpoint: '/api/guess/blind',
 		storageKey: 'blind_guesses',
 		storageDateKey: 'blind_guess_correct',
 	});
@@ -33,19 +26,10 @@
 
 	let revealDone = false;
 	let isCorrect = false;
-	let guessedKillerIds: string[] = [];
-	let excludedKillers: Killer[] = [];
 
-	const killerMatches: Killer[] = killers.map((killer) => ({
-		name: killer.name,
-		altNames: killer.altNames,
-	}));
+	const { excludedKillers } = useExcludedKillers(guesses);
 
 	$: isCorrect = $guesses.some((g) => g.isCorrect);
-	$: guessedKillerIds = $guesses.map((g) => g.name.toLowerCase());
-	$: excludedKillers = killerMatches.filter(
-		(k) => !guessedKillerIds.includes(k.name.toLowerCase())
-	);
 
 	onMount(() => {
 		loading.set(false);
@@ -54,7 +38,7 @@
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
 {#if !isCorrect && !$hasCompletedToday}
-	<GuessingInput killers={excludedKillers} {submitGuess} />
+	<GuessingInput killers={$excludedKillers} {submitGuess} />
 {:else if revealDone || $hasCompletedToday}
 	<button
 		class="mt-4 h-12 w-40 rounded-lg bg-green-600 font-bold text-white transition hover:bg-green-700"
@@ -74,7 +58,7 @@
 	</thead>
 	<tbody>
 		{#each $guesses as guess (guess.guess)}
-			<GuessResult
+			<BlindGuessResult
 				guessed={guess.guess}
 				serverResponse={guess}
 				onDoneReveal={() => {
