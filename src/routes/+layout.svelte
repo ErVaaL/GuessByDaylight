@@ -1,12 +1,37 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+	import ScratchMarkLoader from '../components/ui/ScratchMarkLoader.svelte';
+	import { loading } from '$lib/stores/loading';
+	import { onDestroy, onMount } from 'svelte';
+
+	let isLoading = true;
+	const loadingStore = loading.subscribe((value: boolean) => {
+		isLoading = value;
+	});
+	onDestroy(loadingStore);
+
+  onMount(() => {
+    loading.set(false);
+  });
 </script>
 
 <div
 	class="min-h-screen bg-black font-sans text-white"
 	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center;"
 >
-	<main class="grow"><slot /></main>
+	<main class="grow">
+		<div class="flex justify-center">
+			<div class="flex min-h-screen w-4xl flex-col items-center gap-y-10 bg-[rgba(0,0,0,0.7)]">
+				{#if isLoading}
+					<div class="flex h-screen w-full items-center justify-center">
+						<ScratchMarkLoader />
+					</div>
+				{:else}
+					<slot />
+				{/if}
+			</div>
+		</div>
+	</main>
 	<footer
 		class="fixed right-0 bottom-0 left-0 border-t border-gray-800 bg-black px-4 py-6 text-center text-xs text-gray-400 opacity-70"
 	>
