@@ -1,6 +1,6 @@
 import { onMount } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
-import type { KillerResponse } from '$lib/types';
+import type { BlindKillerResponse, EmoteKillerResponse } from '$lib/types';
 import axios from 'axios';
 
 type UseGuessingGameOptions = {
@@ -8,11 +8,11 @@ type UseGuessingGameOptions = {
 	storageKey: string;
 	storageDateKey: string;
 	todayKey?: string;
-	onGuess?: (guess: KillerResponse) => void;
+	onGuess?: (guess: BlindKillerResponse | EmoteKillerResponse) => void;
 };
 
 export const useGuessingGame = (options: UseGuessingGameOptions) => {
-	const guesses: Writable<KillerResponse[]> = writable([]);
+	const guesses: Writable<BlindKillerResponse[] | EmoteKillerResponse[]> = writable([]);
 	const hasCompletedToday: Writable<boolean> = writable(false);
 
 	const today = new Date().toISOString().split('T')[0];
@@ -38,12 +38,12 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 	const submitGuess = async (guess: string) => {
 		if (!guess) return;
 		const res = await axios.post(options.apiEndpoint, { guess: guess.toLowerCase().trim() });
-		const data: KillerResponse = res.data;
+		const data: BlindKillerResponse | EmoteKillerResponse = res.data;
 		guesses.update((prev) => {
 			const updated = [...prev, data];
+			localStorage.setItem(options.storageKey, JSON.stringify(updated));
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
-				localStorage.setItem(options.storageKey, JSON.stringify(updated));
 				hasCompletedToday.set(true);
 			}
 			return updated;

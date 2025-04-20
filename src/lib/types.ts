@@ -1,4 +1,4 @@
-export type KillerResponse = {
+export type BlindKillerResponse = {
 	name: string;
 	guess: string;
 	stats: {
@@ -10,6 +10,12 @@ export type KillerResponse = {
 		origin: string;
 		releaseYear: string;
 	};
+	isCorrect: boolean;
+};
+
+export type EmoteKillerResponse = {
+	name: string;
+	guess: string;
 	isCorrect: boolean;
 };
 
