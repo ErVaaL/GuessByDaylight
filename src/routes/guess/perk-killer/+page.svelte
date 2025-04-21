@@ -11,16 +11,16 @@
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 
-	const perkEndpoint = `${ENDPOINTS.BASE_GUESS}/perk-survivor`;
+	const perkEndpoint = `${ENDPOINTS.BASE_GUESS}/perk-killer`;
 
 	let perk: Perk | null = null;
 	let onDoneReveal = false;
 	const perkSide = writable<'killer' | 'survivor'>('survivor');
 
-	const { guesses, hasCompletedToday, submitGuess, survivorPerkObscureLevel } = useGuessingGame({
+	const { guesses, hasCompletedToday, submitGuess, killerPerkObscureLevel } = useGuessingGame({
 		apiEndpoint: perkEndpoint,
-		storageKey: 'survivor_perks_guess',
-		storageDateKey: 'survivor_perks_guess_correct',
+		storageKey: 'killer_perks_guess',
+		storageDateKey: 'killer_perks_guess_correct',
 	});
 
 	onMount(async () => {
@@ -38,12 +38,12 @@
 
 <h1 class="text-2xl font-bold">Guess the survivor perk</h1>
 {#if perk && perk !== null}
-	<PerkCard {perk} obscureLevel={$survivorPerkObscureLevel} />
+	<PerkCard {perk} obscureLevel={$killerPerkObscureLevel} />
 	{#if !$hasCompletedToday && !onDoneReveal}
 		<GuessingInput list={$excludedPerks} {submitGuess} />
 	{:else}
 		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
-		<GoNext location="/guess/perk-killer" />
+		<GoNext location="/guess/terror" />
 	{/if}
 	{#each $guesses as guess (guess.name)}
 		<StandardGuessResult

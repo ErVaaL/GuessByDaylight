@@ -5,7 +5,7 @@
 
 	let initialTilt = 0;
 
-	const STORAGE_KEY = 'survivor_perk_random_tilt';
+	const STORAGE_KEY = 'perk_random_tilt';
 
 	if (typeof localStorage !== 'undefined') {
 		const storedTilt = localStorage.getItem(STORAGE_KEY);

@@ -16,9 +16,11 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 	const hasCompletedToday: Writable<boolean> = writable(false);
 	const emotesRevealed: Writable<number> = writable(1);
 	const survivorPerkObscureLevel: Writable<number> = writable(0);
+	const killerPerkObscureLevel: Writable<number> = writable(0);
 
 	const isEmoteGame = options.apiEndpoint.includes('/emotes');
 	const isSurvivorPerkGame = options.apiEndpoint.includes('/perk-survivor');
+	const isKillerPerkGame = options.apiEndpoint.includes('/perk-killer');
 
 	const today = new Date().toISOString().split('T')[0];
 
@@ -41,6 +43,11 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				if (isSurvivorPerkGame) {
 					const storedLevel = localStorage.getItem('survivor_perk_obscure_level');
 					if (storedLevel) survivorPerkObscureLevel.set(parseInt(storedLevel));
+				}
+
+				if (isKillerPerkGame) {
+					const storedLevel = localStorage.getItem('killer_perk_obscure_level');
+					if (storedLevel) killerPerkObscureLevel.set(parseInt(storedLevel));
 				}
 			} catch (error) {
 				console.error('Error parsing stored guesses:', error);
@@ -81,6 +88,14 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				});
 			}
 
+			if (isKillerPerkGame) {
+				killerPerkObscureLevel.update((prev) => {
+					const next = prev + 1;
+					localStorage.setItem('killer_perk_obscure_level', next.toString());
+					return next;
+				});
+			}
+
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
 				if (isEmoteGame) localStorage.setItem('emotes_revealed', '3');
@@ -88,6 +103,10 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 					localStorage.setItem('survivor_perk_obscure_level', '5');
 					survivorPerkObscureLevel.set(5);
 				}
+        if (isKillerPerkGame) {
+          localStorage.setItem('killer_perk_obscure_level', '5');
+          killerPerkObscureLevel.set(5);
+        }
 				hasCompletedToday.set(true);
 			}
 
@@ -103,5 +122,6 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		submitGuess,
 		...(isEmoteGame && { emotesRevealed }),
 		...(isSurvivorPerkGame && { survivorPerkObscureLevel }),
+    ...(isKillerPerkGame && { killerPerkObscureLevel }),
 	};
 };
