@@ -6,9 +6,12 @@
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
 	import { loading } from '$lib/stores/loading';
 	import { onMount } from 'svelte';
+	import { ENDPOINTS } from '$lib/endopoints';
+
+	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
 	const { guesses, hasCompletedToday, submitGuess } = useGuessingGame({
-		apiEndpoint: '/api/guess/blind',
+		apiEndpoint: blindGuessEndpoint,
 		storageKey: 'blind_guesses',
 		storageDateKey: 'blind_guess_correct',
 	});
