@@ -1,0 +1,131 @@
+<script lang="ts">
+	import { ENDPOINTS } from '$lib/endopoints';
+	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
+	import { useGuessingGame } from '$lib/utils/useGuessingGame';
+	import { Play, Pause } from 'lucide-svelte';
+	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
+	import GoNext from '../../../components/universal/GoNext.svelte';
+	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
+	import { onMount } from 'svelte';
+	import axios from 'axios';
+
+	const accessTerror = `${ENDPOINTS.BASE_GUESS}/terror`;
+
+	let volume = 0.5;
+	let terrorRadiusTable: string[] = [];
+	let currentPlaying: keyof typeof audioFiles | null = null;
+	let revealDone = false;
+	let audioFiles: Record<string, HTMLAudioElement> = {};
+
+	onMount(async () => {
+		try {
+			const res = await axios.get(accessTerror);
+			terrorRadiusTable = res.data;
+
+			audioFiles = terrorRadiusTable.reduce(
+				(acc, path, i) => {
+					acc[i] = new Audio(path);
+					acc[i].volume = volume;
+					return acc;
+				},
+				{} as Record<string, HTMLAudioElement>
+			);
+
+			const max = terrorRadiusTable.length;
+			const current = parseInt(localStorage.getItem('terror_guess_revealed') || '1', 10);
+			if (current > max) {
+				localStorage.setItem('terror_revealed', max.toString());
+				terrorLayerUnlocked?.set(max);
+			}
+		} catch (error) {
+			console.error('Error fetching terror data:', error);
+		}
+	});
+
+	const { guesses, hasCompletedToday, submitGuess, terrorLayerUnlocked } = useGuessingGame({
+		apiEndpoint: accessTerror,
+		storageDateKey: 'terror_guess_correct',
+		storageKey: 'terror_guess',
+	});
+
+	$: {
+		for (const audio of Object.values(audioFiles)) {
+			audio.volume = volume;
+		}
+	}
+
+	const { excludedKillers } = useExcludedKillers(guesses);
+
+	const playSound = (layer: string) => {
+		for (const [key, audio] of Object.entries(audioFiles)) {
+			if (key !== layer) audio.pause();
+		}
+
+		if (currentPlaying === layer) {
+			audioFiles[layer].pause();
+			audioFiles[layer].currentTime = 0;
+			currentPlaying = null;
+		} else {
+			audioFiles[layer].currentTime = 0;
+			audioFiles[layer].play();
+			currentPlaying = layer;
+
+			audioFiles[layer].onended = () => {
+				if (currentPlaying === layer) currentPlaying = null;
+			};
+		}
+	};
+
+	const labels: string[] = ['Far', 'Mid', 'Near', 'Chase'];
+</script>
+
+<h1 class="p-2 text-2xl font-bold">Guess the killer from terror</h1>
+<div class="grid min-h-fit w-4/5 grid-cols-4 items-center border-y-2 border-y-red-300">
+	{#each labels as label (label)}
+		<div class="flex items-center justify-center place-self-center p-4 font-bold text-white">
+			{label}
+		</div>
+	{/each}
+	{#each Object.keys(audioFiles) as layer (layer)}
+		<button
+			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-700 p-4 text-white hover:bg-gray-600"
+			on:click={() => playSound(layer)}
+			><span class="text-xl">
+				{#if currentPlaying === layer}
+					<Pause class="inline" />
+				{:else}
+					<Play class="inline" />
+				{/if}
+			</span></button
+		>
+	{/each}
+	<div class="col-span-4 mt-2 flex flex-col items-center justify-center gap-2 p-2">
+		<label for="volume" class="text-white">Volume</label>
+		<input
+			id="volume"
+			type="range"
+			min="0"
+			max="1"
+			step="0.01"
+			bind:value={volume}
+			class="w-1/2 accent-red-500"
+		/>
+	</div>
+</div>
+{#if !$hasCompletedToday && !revealDone}
+	<GuessingInput list={$excludedKillers} {submitGuess} />
+{:else}
+	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+	<GoNext location="/guess/perk-survivor" />
+{/if}
+<div class="flex flex-col-reverse gap-y-2">
+	{#each $guesses as guess (guess.guess)}
+		<StandardGuessResult
+			guessed={guess.guess}
+			serverResponse={guess}
+			onDoneReveal={() => {
+				revealDone = true;
+			}}
+		/>
+	{/each}
+</div>

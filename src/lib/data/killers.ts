@@ -50,10 +50,10 @@ export const killers = [
 		releaseYear: 2022,
 		emotes: ['U+1F3C3 U+1F3FC U+200D U+2642 U+FE0F', 'U+1F576 U+FE0F', 'U+1F52A'],
 		terrorRadiusSound: [
-			'/music/mastermind_far.mp3',
-			'/music/mastermind_mid.mp3',
-			'/music/mastermind_close.mp3',
-			'/music/mastermind_chase.mp3',
+			'/sounds/mastermind/terrorRadius_mastermind_far.ogg',
+			'/sounds/mastermind/terrorRadius_mastermind_mid.ogg',
+			'/sounds/mastermind/terrorRadius_mastermind_near.ogg',
+			'/sounds/mastermind/terrorRadius_mastermind_chase.ogg',
 		],
 	},
 ];

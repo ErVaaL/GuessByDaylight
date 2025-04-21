@@ -17,10 +17,12 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 	const emotesRevealed: Writable<number> = writable(1);
 	const survivorPerkObscureLevel: Writable<number> = writable(0);
 	const killerPerkObscureLevel: Writable<number> = writable(0);
+	const terrorLayerUnlocked: Writable<number> = writable(1);
 
 	const isEmoteGame = options.apiEndpoint.includes('/emotes');
 	const isSurvivorPerkGame = options.apiEndpoint.includes('/perk-survivor');
 	const isKillerPerkGame = options.apiEndpoint.includes('/perk-killer');
+	const isTerrorGame = options.apiEndpoint.includes('/terror');
 
 	const today = new Date().toISOString().split('T')[0];
 
@@ -49,6 +51,11 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 					const storedLevel = localStorage.getItem('killer_perk_obscure_level');
 					if (storedLevel) killerPerkObscureLevel.set(parseInt(storedLevel));
 				}
+
+				if (isTerrorGame) {
+					const storedLevel = localStorage.getItem('terror_layer_unlocked');
+					if (storedLevel) terrorLayerUnlocked.set(parseInt(storedLevel));
+				}
 			} catch (error) {
 				console.error('Error parsing stored guesses:', error);
 			}
@@ -56,6 +63,9 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 			localStorage.removeItem(options.storageDateKey);
 			localStorage.removeItem(options.storageKey);
 			if (isEmoteGame) localStorage.removeItem('emotes_revealed');
+			if (isSurvivorPerkGame) localStorage.removeItem('survivor_perk_obscure_level');
+			if (isKillerPerkGame) localStorage.removeItem('killer_perk_obscure_level');
+			if (isTerrorGame) localStorage.removeItem('terror_layer_unlocked');
 		}
 	});
 
@@ -96,6 +106,14 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				});
 			}
 
+			if (isTerrorGame) {
+				terrorLayerUnlocked.update((prev) => {
+					const next = prev + 1;
+					localStorage.setItem('terror_layer_unlocked', next.toString());
+					return next;
+				});
+			}
+
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
 				if (isEmoteGame) localStorage.setItem('emotes_revealed', '3');
@@ -103,10 +121,14 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 					localStorage.setItem('survivor_perk_obscure_level', '5');
 					survivorPerkObscureLevel.set(5);
 				}
-        if (isKillerPerkGame) {
-          localStorage.setItem('killer_perk_obscure_level', '5');
-          killerPerkObscureLevel.set(5);
-        }
+				if (isKillerPerkGame) {
+					localStorage.setItem('killer_perk_obscure_level', '5');
+					killerPerkObscureLevel.set(5);
+				}
+				if (isTerrorGame) {
+					localStorage.setItem('terror_layer_unlocked', '4');
+					terrorLayerUnlocked.set(4);
+				}
 				hasCompletedToday.set(true);
 			}
 
@@ -122,6 +144,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		submitGuess,
 		...(isEmoteGame && { emotesRevealed }),
 		...(isSurvivorPerkGame && { survivorPerkObscureLevel }),
-    ...(isKillerPerkGame && { killerPerkObscureLevel }),
+		...(isKillerPerkGame && { killerPerkObscureLevel }),
+    ...(isTerrorGame && { terrorLayerUnlocked }),
 	};
 };
