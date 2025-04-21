@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { perks } from '$lib/data/perks';
 
-const correctPerkName = 'Distressing';
+const correctPerkName = 'Any Means Necessary';
 const correctPerk = perks.find((perk) => perk.name.toLowerCase() === correctPerkName.toLowerCase());
 
 if (!correctPerk) {

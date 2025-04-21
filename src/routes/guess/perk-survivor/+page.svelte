@@ -17,7 +17,7 @@
 	let onDoneReveal = false;
 	const perkSide = writable<'killer' | 'survivor'>('survivor');
 
-	const { guesses, hasCompletedToday, submitGuess } = useGuessingGame({
+	const { guesses, hasCompletedToday, submitGuess, survivorPerkObscureLevel } = useGuessingGame({
 		apiEndpoint: perkEndpoint,
 		storageKey: 'survivor_perks_guess',
 		storageDateKey: 'survivor_perks_guess_correct',
@@ -38,11 +38,11 @@
 
 <h1 class="text-2xl font-bold">Guess the survivor perk</h1>
 {#if perk && perk !== null}
-	<PerkCard {perk} />
+	<PerkCard {perk} obscureLevel={$survivorPerkObscureLevel} />
 	{#if !$hasCompletedToday && !onDoneReveal}
 		<GuessingInput list={$excludedPerks} {submitGuess} />
 	{:else}
-		<p class="text-green-500 text-md font-bold">Congratulations, you guessed right!</p>
+		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
 		<GoNext location="/guess/perk-killer" />
 	{/if}
 	{#each $guesses as guess (guess.name)}
