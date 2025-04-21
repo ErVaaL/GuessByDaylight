@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import BlindGuessResult from '../../../components/blind/BlindGuessResult.svelte';
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
@@ -8,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { ENDPOINTS } from '$lib/endopoints';
 	import GoNext from '../../../components/universal/GoNext.svelte';
+	import type { BlindKillerResponse } from '$lib/types';
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
@@ -60,7 +60,7 @@
 		{#each $guesses as guess (guess.guess)}
 			<BlindGuessResult
 				guessed={guess.guess}
-				serverResponse={guess}
+				serverResponse={guess as BlindKillerResponse}
 				onDoneReveal={() => {
 					revealDone = true;
 				}}

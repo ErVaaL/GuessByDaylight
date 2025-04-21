@@ -4,7 +4,6 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
-	import { goto } from '$app/navigation';
 	import { ENDPOINTS } from '$lib/endopoints';
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';

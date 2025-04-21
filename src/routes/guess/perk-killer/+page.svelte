@@ -26,8 +26,15 @@
 	onMount(async () => {
 		try {
 			const res = await axios.get(perkEndpoint);
-			perk = res.data;
-			perkSide.set(perk.side);
+			if (
+				res.data &&
+				res.data !== null &&
+				typeof res.data.side === 'string' &&
+				(res.data.side === 'killer' || res.data.side === 'survivor')
+			) {
+				perk = res.data;
+				perkSide.set(perk!.side as 'killer' | 'survivor');
+			}
 		} catch (error) {
 			console.error('Error fetching perk:', error);
 		}
