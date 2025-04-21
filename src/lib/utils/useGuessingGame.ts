@@ -15,8 +15,10 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 	const guesses: Writable<BlindKillerResponse[] | StandardResponse[]> = writable([]);
 	const hasCompletedToday: Writable<boolean> = writable(false);
 	const emotesRevealed: Writable<number> = writable(1);
+	const survivorPerkObscureLevel: Writable<number> = writable(0);
 
 	const isEmoteGame = options.apiEndpoint.includes('/emotes');
+	const isSurvivorPerkGame = options.apiEndpoint.includes('/perk-survivor');
 
 	const today = new Date().toISOString().split('T')[0];
 
@@ -34,6 +36,11 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				if (isEmoteGame) {
 					const storedRevealed = localStorage.getItem('emotes_revealed');
 					if (storedRevealed) emotesRevealed.set(parseInt(storedRevealed));
+				}
+
+				if (isSurvivorPerkGame) {
+					const storedLevel = localStorage.getItem('survivor_perk_obscure_level');
+					if (storedLevel) survivorPerkObscureLevel.set(parseInt(storedLevel));
 				}
 			} catch (error) {
 				console.error('Error parsing stored guesses:', error);
@@ -66,9 +73,21 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				});
 			}
 
+			if (isSurvivorPerkGame) {
+				survivorPerkObscureLevel.update((prev) => {
+					const next = prev + 1;
+					localStorage.setItem('survivor_perk_obscure_level', next.toString());
+					return next;
+				});
+			}
+
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
 				if (isEmoteGame) localStorage.setItem('emotes_revealed', '3');
+				if (isSurvivorPerkGame) {
+					localStorage.setItem('survivor_perk_obscure_level', '5');
+					survivorPerkObscureLevel.set(5);
+				}
 				hasCompletedToday.set(true);
 			}
 
@@ -83,5 +102,6 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		hasCompletedToday,
 		submitGuess,
 		...(isEmoteGame && { emotesRevealed }),
+		...(isSurvivorPerkGame && { survivorPerkObscureLevel }),
 	};
 };
