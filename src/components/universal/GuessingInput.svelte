@@ -1,7 +1,6 @@
 <script lang="ts">
 	import SuggestionList from './SuggestionList.svelte';
-
-	export let killers: { name: string; altNames: string[] }[] = [];
+	export let list: Array<{ name: string; altNames?: string[] }> = [];
 	export let submitGuess: (input: string) => void;
 	let input = '';
 </script>
@@ -15,7 +14,7 @@
 			class="my-4 h-10 w-64 rounded-lg bg-gray-600 p-2 text-white"
 		/>
 		<SuggestionList
-			{killers}
+			suggestionList={list}
 			query={input}
 			onSelect={(name) => {
 				input = name;

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
-	import type { EmoteKillerResponse } from '$lib/types';
+	import type { StandardResponse } from '$lib/types';
 
 	export let guessed: string;
-	export let serverResponse: EmoteKillerResponse;
+	export let serverResponse: StandardResponse;
 	export let onDoneReveal: () => void = () => {};
 
 	const answerColor = (indicator: boolean) => {
@@ -14,9 +14,10 @@
 				return 'bg-red-500';
 		}
 	};
+  console.log(guessed, serverResponse.name);
 </script>
 
-{#if serverResponse.name !== '' && serverResponse.name.toLowerCase() === guessed}
+{#if serverResponse.name !== '' && serverResponse.name.toLowerCase() === guessed.toLowerCase()}
 	<div
 		class={`flex h-10 w-64 items-center justify-center rounded-lg ${answerColor(
 			serverResponse.isCorrect
