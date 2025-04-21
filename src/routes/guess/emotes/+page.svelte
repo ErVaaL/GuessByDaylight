@@ -4,9 +4,10 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
-	import EmoteGuessResult from '../../../components/emotes/EmoteGuessResult.svelte';
 	import { goto } from '$app/navigation';
 	import { ENDPOINTS } from '$lib/endopoints';
+	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
+	import GoNext from '../../../components/universal/GoNext.svelte';
 
 	const accessEmotes = `${ENDPOINTS.BASE_GUESS}/emotes`;
 
@@ -34,7 +35,7 @@
 			const current = parseInt(localStorage.getItem('emotes_guess_revealed') || '1', 10);
 			if (current > max) {
 				localStorage.setItem('emotes_revealed', max.toString());
-        emotesRevealed?.set(max);
+				emotesRevealed?.set(max);
 			}
 		} catch (error) {
 			console.error('Error fetching emoji data:', error);
@@ -57,18 +58,14 @@
 	{/each}
 </div>
 {#if !$hasCompletedToday}
-	<GuessingInput killers={$excludedKillers} {submitGuess} />
+	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else if revealDone || $hasCompletedToday}
-	<button
-		class="mt-4 h-12 w-40 rounded-lg bg-green-600 font-bold text-white transition hover:bg-green-700"
-		on:click={() => goto('/guess/perk-survivor')}
-	>
-		Next game →
-	</button>
+	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+	<GoNext location="/guess/perk-survivor" />
 {/if}
 <div class="flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
-		<EmoteGuessResult
+		<StandardGuessResult
 			guessed={guess.guess}
 			serverResponse={guess}
 			onDoneReveal={() => {

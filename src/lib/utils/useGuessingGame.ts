@@ -1,6 +1,6 @@
 import { onMount } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
-import type { BlindKillerResponse, EmoteKillerResponse } from '$lib/types';
+import type { BlindKillerResponse, StandardResponse } from '$lib/types';
 import axios from 'axios';
 
 type UseGuessingGameOptions = {
@@ -8,11 +8,11 @@ type UseGuessingGameOptions = {
 	storageKey: string;
 	storageDateKey: string;
 	todayKey?: string;
-	onGuess?: (guess: BlindKillerResponse | EmoteKillerResponse) => void;
+	onGuess?: (guess: BlindKillerResponse | StandardResponse) => void;
 };
 
 export const useGuessingGame = (options: UseGuessingGameOptions) => {
-	const guesses: Writable<BlindKillerResponse[] | EmoteKillerResponse[]> = writable([]);
+	const guesses: Writable<BlindKillerResponse[] | StandardResponse[]> = writable([]);
 	const hasCompletedToday: Writable<boolean> = writable(false);
 	const emotesRevealed: Writable<number> = writable(1);
 
@@ -50,7 +50,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 
 		try {
 			const res = await axios.post(options.apiEndpoint, { guess: guess.toLowerCase().trim() });
-			const data: BlindKillerResponse | EmoteKillerResponse = res.data;
+			const data: BlindKillerResponse | StandardResponse = res.data;
 
 			guesses.update((prev) => {
 				const updated = [...prev, data];
@@ -58,7 +58,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 				return updated;
 			});
 
-			if (isEmoteGame && 'emotesRevealed' in data && typeof data.emotesRevealed === 'number') {
+			if (isEmoteGame) {
 				emotesRevealed.update((prev) => {
 					const next = prev + 1;
 					localStorage.setItem('emotes_revealed', next.toString());
@@ -68,7 +68,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 
 			if (data.isCorrect) {
 				localStorage.setItem(options.storageDateKey, today);
-        if (isEmoteGame) localStorage.setItem('emotes_revealed', '3');
+				if (isEmoteGame) localStorage.setItem('emotes_revealed', '3');
 				hasCompletedToday.set(true);
 			}
 

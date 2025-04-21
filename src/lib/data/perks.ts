@@ -1,10 +1,14 @@
 export const perks = [
 	{
 		name: 'Distressing',
-		icon: 'perks/distressing.png'
+    side: 'killer',
+    belongsTo: 'trapper',
+		icon: '/images/iconPerks_Distressing.png'
 	},
 	{
 		name: 'Any Means Necessary',
-		icon: 'perks/any-means-necessary.png'
+    side: 'survivor',
+    belongsTo: 'Yui Kimura',
+		icon: '/images/iconPerks_AnyMeansNecessary.png'
 	}
 ];

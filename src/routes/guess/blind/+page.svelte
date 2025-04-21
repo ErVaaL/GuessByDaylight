@@ -7,6 +7,7 @@
 	import { loading } from '$lib/stores/loading';
 	import { onMount } from 'svelte';
 	import { ENDPOINTS } from '$lib/endopoints';
+	import GoNext from '../../../components/universal/GoNext.svelte';
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
@@ -41,14 +42,10 @@
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
 {#if !isCorrect && !$hasCompletedToday}
-	<GuessingInput killers={$excludedKillers} {submitGuess} />
+	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else if revealDone || $hasCompletedToday}
-	<button
-		class="mt-4 h-12 w-40 rounded-lg bg-green-600 font-bold text-white transition hover:bg-green-700"
-		on:click={() => goto('/guess/emotes')}
-	>
-		Next game →
-	</button>
+	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+	<GoNext location="/guess/emotes" />
 {/if}
 
 <table class="table-fixed border-separate border-spacing-2">

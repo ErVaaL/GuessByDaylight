@@ -13,7 +13,14 @@ export type BlindKillerResponse = {
 	isCorrect: boolean;
 };
 
-export type EmoteKillerResponse = {
+export type Perk = {
+	name: string;
+	side: string;
+	belongsTo: string;
+	icon: string;
+};
+
+export type StandardResponse = {
 	name: string;
 	guess: string;
 	isCorrect: boolean;
