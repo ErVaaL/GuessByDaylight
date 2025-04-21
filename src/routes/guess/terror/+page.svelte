@@ -2,7 +2,7 @@
 	import { ENDPOINTS } from '$lib/endopoints';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
-	import { Play, Pause } from 'lucide-svelte';
+	import { Play, Pause, Lock } from 'lucide-svelte';
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
@@ -46,7 +46,20 @@
 		apiEndpoint: accessTerror,
 		storageDateKey: 'terror_guess_correct',
 		storageKey: 'terror_guess',
+		onGuess(guess) {
+			if (guess.isCorrect) {
+				stopAllAudio();
+				revealDone = true;
+			}
+		},
 	});
+	const stopAllAudio = () => {
+		for (const audio of Object.values(audioFiles)) {
+			audio.pause();
+			audio.currentTime = 0;
+		}
+		currentPlaying = null;
+	};
 
 	$: {
 		for (const audio of Object.values(audioFiles)) {
@@ -86,13 +99,21 @@
 			{label}
 		</div>
 	{/each}
-	{#each Object.keys(audioFiles) as layer (layer)}
+	{#each Object.keys(audioFiles) as layer, i (layer)}
 		<button
-			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-700 p-4 text-white hover:bg-gray-600"
-			on:click={() => playSound(layer)}
+			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-700 p-4
+      {i < ($terrorLayerUnlocked ?? 0)
+				? 'bg-gray-700 text-white hover:bg-gray-600'
+				: 'cursor-not-allowed bg-gray-500 text-gray-400'}"
+			on:click={() => {
+				if (i < ($terrorLayerUnlocked ?? 0)) playSound(layer);
+			}}
+			disabled={i >= ($terrorLayerUnlocked ?? 0)}
 			><span class="text-xl">
 				{#if currentPlaying === layer}
 					<Pause class="inline" />
+				{:else if i >= ($terrorLayerUnlocked ?? 0)}
+					<Lock class="inline" />
 				{:else}
 					<Play class="inline" />
 				{/if}
@@ -124,6 +145,7 @@
 			guessed={guess.guess}
 			serverResponse={guess}
 			onDoneReveal={() => {
+				stopAllAudio();
 				revealDone = true;
 			}}
 		/>

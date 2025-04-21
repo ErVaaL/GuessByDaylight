@@ -14,7 +14,6 @@
 				return 'bg-red-500';
 		}
 	};
-  console.log(guessed, serverResponse.name);
 </script>
 
 {#if serverResponse.name !== '' && serverResponse.name.toLowerCase() === guessed.toLowerCase()}
