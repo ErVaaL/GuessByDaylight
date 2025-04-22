@@ -30,6 +30,16 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		const storedCompletion = localStorage.getItem(options.storageDateKey);
 		const storedGuesses = localStorage.getItem(options.storageKey);
 
+		if (storedCompletion && storedCompletion !== today) {
+			localStorage.removeItem(options.storageDateKey);
+			localStorage.removeItem(options.storageKey);
+			localStorage.removeItem('emotes_revealed');
+			localStorage.removeItem('survivor_perk_obscure_level');
+			localStorage.removeItem('killer_perk_obscure_level');
+			localStorage.removeItem('terror_layer_unlocked');
+			localStorage.removeItem('perk_random_tilt');
+		}
+
 		if (storedGuesses) {
 			try {
 				const parsedGuesses = JSON.parse(storedGuesses);
@@ -59,13 +69,6 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 			} catch (error) {
 				console.error('Error parsing stored guesses:', error);
 			}
-		} else {
-			localStorage.removeItem(options.storageDateKey);
-			localStorage.removeItem(options.storageKey);
-			if (isEmoteGame) localStorage.removeItem('emotes_revealed');
-			if (isSurvivorPerkGame) localStorage.removeItem('survivor_perk_obscure_level');
-			if (isKillerPerkGame) localStorage.removeItem('killer_perk_obscure_level');
-			if (isTerrorGame) localStorage.removeItem('terror_layer_unlocked');
 		}
 	});
 
@@ -145,6 +148,6 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		...(isEmoteGame && { emotesRevealed }),
 		...(isSurvivorPerkGame && { survivorPerkObscureLevel }),
 		...(isKillerPerkGame && { killerPerkObscureLevel }),
-    ...(isTerrorGame && { terrorLayerUnlocked }),
+		...(isTerrorGame && { terrorLayerUnlocked }),
 	};
 };
