@@ -1,2 +1,14 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
+
+@font-face {
+  font-family: "Noto Color Emoji";
+  src: url("/fonts/NotoColorEmoji-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+.emoji-text {
+  font-family: "Noto Color Emoji", sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+}

@@ -46,10 +46,10 @@
 <div class="grid h-40 w-4/5 grid-cols-3 items-center border-y-2 border-y-red-300">
 	{#each emojiTable as code, i (code)}
 		<div
-			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-600"
+			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-400"
 		>
 			{#if i < $emotesRevealed! || $hasCompletedToday}
-				<span class="self-center text-4xl text-black">{fromUnicodeToEmoji(code)}</span>
+				<span class="self-center text-4xl text-black emoji-text">{fromUnicodeToEmoji(code)}</span>
 			{:else}
 				<span class="text-4xl text-gray-400">?</span>
 			{/if}
