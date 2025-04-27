@@ -1,5 +1,5 @@
 import { supabaseServer } from '$lib/supabaseServer';
-import type { KillerFromDb } from '$lib/types';
+import type { KillerFromDb, PerkFromDb } from '$lib/types';
 
 async function getAnswer(game: string, answerId: string): Promise<KillerFromDb | null> {
 	if (game === 'perk-survivor' || game === 'perk-killer') {
@@ -29,8 +29,11 @@ async function getAnswer(game: string, answerId: string): Promise<KillerFromDb |
 	}
 }
 
-export async function getDailyAnswer(correctKiller: KillerFromDb | null, game: string) {
-	if (correctKiller) return correctKiller;
+export async function getDailyAnswer(
+	correctAnswer: KillerFromDb | PerkFromDb | null,
+	game: string
+): Promise<KillerFromDb | PerkFromDb> {
+	if (correctAnswer) return correctAnswer;
 	const today = new Date().toISOString().split('T')[0];
 	const { data: correct, error } = await supabaseServer
 		.from('DailyAnswers')

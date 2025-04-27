@@ -76,7 +76,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		if (!guess) return;
 
 		try {
-			const res = await axios.post(options.apiEndpoint, { guess: guess.toLowerCase().trim() });
+			const res = await axios.post(options.apiEndpoint, { guess: guess.trim() });
 			const data: BlindKillerResponse | StandardResponse = res.data;
 
 			guesses.update((prev) => {

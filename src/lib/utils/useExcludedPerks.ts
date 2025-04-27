@@ -1,18 +1,19 @@
-import { derived } from 'svelte/store';
-import { perks } from '$lib/data/perks';
+import { derived, readable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { Perk } from '$lib/types';
+import type { PerkFromDb } from '$lib/types';
 
 export function useExcludedPerks(
 	guesses: Writable<{ name: string }[]>,
-	currentSide: Writable<'killer' | 'survivor'>
+	perkSide: string,
+	perksArray: PerkFromDb[]
 ) {
-	const excludedPerks = derived([guesses, currentSide], ([$guesses, $currentSide]) => {
+	const perks = readable(perksArray);
+	const excludedPerks = derived([guesses, perks], ([$guesses, $perks]) => {
 		const guessedPerkNames = $guesses.map((guess) => guess.name.toLowerCase());
 
-		return perks
-			.filter((perk: Perk) => perk.side === $currentSide)
-			.filter((perk: Perk) => !guessedPerkNames.includes(perk.name.toLowerCase()));
+		return $perks
+			.filter((perk: PerkFromDb) => perk.side === perkSide)
+			.filter((perk: PerkFromDb) => !guessedPerkNames.includes(perk.name.toLowerCase()));
 	});
 
 	return { excludedPerks };

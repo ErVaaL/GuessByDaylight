@@ -3,7 +3,7 @@
 	export let obscureLevel: number = 0;
 	const perkBg = '/images/perk-bg.png';
 
-	let initialTilt = 0;
+	let initialTilt = 30;
 
 	const STORAGE_KEY = 'perk_random_tilt';
 
@@ -12,7 +12,8 @@
 		if (storedTilt) {
 			initialTilt = parseFloat(storedTilt);
 		} else {
-			initialTilt = Math.floor(Math.random() * 360) - 180;
+			let randomValue = Math.random();
+			initialTilt = Math.floor(randomValue * 360) - 180;
 			localStorage.setItem(STORAGE_KEY, initialTilt.toString());
 		}
 	}

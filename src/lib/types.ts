@@ -33,12 +33,15 @@ export type KillerFromDb = {
 	emotes: string[];
 };
 
-export type Perk = {
-	name: string;
-	side: string;
-	belongsTo: string;
-	icon: string;
-};
+export type PerkFromDb = {
+  id: number;
+  name: string;
+  side: string;
+  icon: string;
+  survivor_id?: string;
+  killer_id?: string;
+}
+
 
 export type StandardResponse = {
 	name: string;

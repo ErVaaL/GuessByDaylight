@@ -1,45 +1,27 @@
 <script lang="ts">
 	import PerkCard from '../../../components/perk/PerkCard.svelte';
-	import type { Perk } from '$lib/types';
-	import { onMount } from 'svelte';
-	import axios from 'axios';
 	import { ENDPOINTS } from '$lib/endopoints';
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
 	import { useExcludedPerks } from '$lib/utils/useExcludedPerks';
-	import { writable } from 'svelte/store';
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
+	import type { PageProps } from './$types';
 
 	const perkEndpoint = `${ENDPOINTS.BASE_GUESS}/perk-survivor`;
 
-	let perk: Perk | null = null;
-	let onDoneReveal = false;
-	const perkSide = writable<'killer' | 'survivor'>('survivor');
+	let { data }: PageProps = $props();
+
+	let onDoneReveal = $state(false);
 
 	const { guesses, hasCompletedToday, submitGuess, survivorPerkObscureLevel } = useGuessingGame({
 		apiEndpoint: perkEndpoint,
 		storageKey: 'survivor_perks_guess',
 		storageDateKey: 'survivor_perks_guess_correct',
 	});
+	const perk = data.survivorPerks;
 
-	onMount(async () => {
-		try {
-			const res = await axios.get(perkEndpoint);
-			if (
-				res.data && res.data !== null &&
-				typeof res.data.side === 'string' &&
-				(res.data.side === 'killer' || res.data.side === 'survivor')
-			) {
-				perk = res.data;
-				perkSide.set(perk!.side as 'killer' | 'survivor');
-			}
-		} catch (error) {
-			console.error('Error fetching perk:', error);
-		}
-	});
-
-	const { excludedPerks } = useExcludedPerks(guesses, perkSide);
+	const { excludedPerks } = useExcludedPerks(guesses, data.survivorPerks.side, data.perks);
 </script>
 
 <h1 class="text-2xl font-bold">Guess the survivor perk</h1>
@@ -51,15 +33,17 @@
 		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
 		<GoNext location="/guess/perk-killer" />
 	{/if}
-	{#each $guesses as guess (guess.name)}
-		<StandardGuessResult
-			guessed={guess.name}
-			serverResponse={guess}
-			onDoneReveal={() => {
-				if (guess.isCorrect) {
-					onDoneReveal = true;
-				}
-			}}
-		/>
-	{/each}
+	<div class="flex flex-col-reverse gap-y-2">
+		{#each $guesses as guess (guess.name)}
+			<StandardGuessResult
+				guessed={guess.name}
+				serverResponse={guess}
+				onDoneReveal={() => {
+					if (guess.isCorrect) {
+						onDoneReveal = true;
+					}
+				}}
+			/>
+		{/each}
+	</div>
 {/if}
