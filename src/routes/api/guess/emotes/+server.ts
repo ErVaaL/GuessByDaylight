@@ -8,7 +8,7 @@ const game = 'emotes';
 
 export const GET: RequestHandler = async () => {
 	try {
-		const correct = await getDailyAnswer(correctKiller, game);
+		const correct = await getDailyAnswer(correctKiller, game) as KillerFromDb;
 
 		if (!correct)
 			return new Response(JSON.stringify({ error: 'No killer found' }), { status: 404 });
