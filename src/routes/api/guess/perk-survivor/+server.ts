@@ -35,9 +35,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		.eq('name', guess)
 		.single();
 
-    console.log(guess);
-    
-
 	if (error || !guessedPerk)
 		return new Response(JSON.stringify({ error: 'Perk not found' }), { status: 404 });
 
