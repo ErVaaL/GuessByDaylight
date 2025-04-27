@@ -2,32 +2,12 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { supabaseServer } from '$lib/supabaseServer';
 import type { BlindKillerResponse, KillerFromDb } from '$lib/types';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { getDailyAnswer } from '$lib/utils/getDailyAnswer';
 
-let correctKiller: KillerFromDb | null = null;
+const correctKiller: KillerFromDb | null = null;
+const game = 'blind';
 
-function seededRandom(max: number) {
-	const today = new Date().toISOString().split('T')[0];
-	let seed = 0;
-	for (const char of today) {
-		seed += char.charCodeAt(0);
-	}
-	return seed % max;
-}
-
-async function getDailyKiller(): Promise<KillerFromDb> {
-	if (!correctKiller) {
-		const { data: killers, error } = await supabaseServer.from('Killers').select('*');
-
-		if (error || !killers || killers.length === 0) {
-			throw new Error(`Failed to fetch killers: ${error?.message}`);
-		}
-
-		const randomIndex = seededRandom(killers.length);
-		correctKiller = killers[randomIndex];
-	}
-
-	return correctKiller!;
-}
+getDailyAnswer(correctKiller, game);
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -45,7 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			return new Response(JSON.stringify({ error: 'Killer not found' }), { status: 404 });
 		}
 
-		const correct = await getDailyKiller();
+		const correct = await getDailyAnswer(correctKiller, game);
 
 		const compareArrayStat = (a: Array<string | number>, b: Array<string | number>) => {
 			if (JSON.stringify(a) === JSON.stringify(b)) return 'correct';

@@ -1,8 +1,8 @@
-import type { PageServerLoad } from './$types';
 import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb } from '$lib/types';
+import type { LayoutServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: LayoutServerLoad = async () => {
 	const { data: killers, error }: { data: KillerFromDb[] | null; error: Error | null } =
 		await supabaseServer.from('Killers').select('*');
 

@@ -2,18 +2,20 @@
 	import '../app.css';
 	import ScratchMarkLoader from '../components/ui/ScratchMarkLoader.svelte';
 	import { loading } from '$lib/stores/loading';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	let isLoading = true;
+	let isLoading = $state(true);
 	const loadingStore = loading.subscribe((value: boolean) => {
 		isLoading = value;
 	});
 	onDestroy(loadingStore);
 
-	onMount(() => {
-		const today = new Date().toISOString().split('T')[0];
+	let { children, data } = $props();
+
+	$effect(() => {
+		const serverDate = data.answers_date;
 		const lastResetDate = localStorage.getItem('lastResetDate');
-		if (lastResetDate !== today) {
+		if (lastResetDate !== serverDate) {
 			localStorage.removeItem('emotes_guess');
 			localStorage.removeItem('emotes_guess_correct');
 			localStorage.removeItem('blind_guesses');
@@ -30,7 +32,7 @@
 			localStorage.removeItem('terror_layer_unlocked');
 			localStorage.removeItem('perk_random_tilt');
 
-			localStorage.setItem('lastResetDate', today);
+			localStorage.setItem('lastResetDate', serverDate);
 		}
 		loading.set(false);
 	});
@@ -48,7 +50,7 @@
 						<ScratchMarkLoader />
 					</div>
 				{:else}
-					<slot />
+					{@render children?.()}
 				{/if}
 			</div>
 		</div>
