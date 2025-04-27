@@ -1,22 +1,15 @@
-import { derived } from 'svelte/store';
-import { killers } from '$lib/data/killers';
+import { derived, readable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
+import type { KillerFromDb } from '$lib/types';
 
-type Killer = {
-	name: string;
-	altNames: string[];
-};
-
-export function useExcludedKillers(guesses: Writable<{ name: string }[]>) {
-	const excludedKillers = derived(guesses, ($guesses) => {
+export function useExcludedKillers(
+	guesses: Writable<{ name: string }[]>,
+	killersArray: KillerFromDb[]
+) {
+	const killers = readable(killersArray);
+	const excludedKillers = derived([guesses, killers], ([$guesses, $killers]) => {
 		const guessedKillerIds = $guesses.map((guess) => guess.name.toLowerCase());
-		const killerMatches: Killer[] = killers.map((killer) => ({
-			name: killer.name,
-			altNames: killer.altNames,
-		}));
-
-		return killerMatches.filter((killer) => !guessedKillerIds.includes(killer.name.toLowerCase()));
+		return $killers.filter((killer) => !guessedKillerIds.includes(killer.id));
 	});
-
 	return { excludedKillers };
 }

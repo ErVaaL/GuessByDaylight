@@ -4,12 +4,14 @@
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
 	import { loading } from '$lib/stores/loading';
-	import { onMount } from 'svelte';
 	import { ENDPOINTS } from '$lib/endopoints';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import type { BlindKillerResponse } from '$lib/types';
+	import type { PageProps } from './$types';
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
+
+	let { data }: PageProps = $props();
 
 	const { guesses, hasCompletedToday, submitGuess } = useGuessingGame({
 		apiEndpoint: blindGuessEndpoint,
@@ -28,14 +30,13 @@
 		{ val: 'Release Year' },
 	];
 
-	let revealDone = false;
-	let isCorrect = false;
+	let revealDone = $state(false);
+	let isCorrect = $state(false);
 
-	const { excludedKillers } = useExcludedKillers(guesses);
+	const { excludedKillers } = useExcludedKillers(guesses, data.killers);
 
-	$: isCorrect = $guesses.some((g) => g.isCorrect);
-
-	onMount(() => {
+	$effect(() => {
+		isCorrect = $guesses.some((g) => g.isCorrect);
 		loading.set(false);
 	});
 </script>
@@ -61,6 +62,7 @@
 			<BlindGuessResult
 				guessed={guess.guess}
 				serverResponse={guess as BlindKillerResponse}
+        killers={data.killers}
 				onDoneReveal={() => {
 					revealDone = true;
 				}}

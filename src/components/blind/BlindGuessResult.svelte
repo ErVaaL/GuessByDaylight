@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
-	import { killers } from '$lib/data/killers';
-	import type { KillerBlind, BlindKillerResponse } from '$lib/types';
+	import type { BlindKillerResponse, KillerFromDb } from '$lib/types';
 
 	export let guessed: string;
 	export let serverResponse: BlindKillerResponse;
+  export let killers: KillerFromDb[] = [];
 	export let onDoneReveal: () => void = () => {};
 
-	const guessedKiller: KillerBlind = killers.find((killer) => killer.id === guessed.toLowerCase())!;
+	const guessedKiller: KillerFromDb = killers.find((killer) => killer.id === guessed.toLowerCase())!;
 	if (!guessedKiller) {
 		throw new Error(`Killer with ID ${guessed} not found`);
 	}
