@@ -4,10 +4,12 @@
 
 	export let guessed: string;
 	export let serverResponse: BlindKillerResponse;
-  export let killers: KillerFromDb[] = [];
+	export let killers: KillerFromDb[] = [];
 	export let onDoneReveal: () => void = () => {};
 
-	const guessedKiller: KillerFromDb = killers.find((killer) => killer.id === guessed.toLowerCase())!;
+	const guessedKiller: KillerFromDb = killers.find(
+		(killer) => killer.id === guessed.toLowerCase()
+	)!;
 	if (!guessedKiller) {
 		throw new Error(`Killer with ID ${guessed} not found`);
 	}
@@ -23,21 +25,28 @@
 				: '';
 
 	const answers = [
-		{ val: guessedKiller.name, status: serverResponse.name },
-		{ val: guessedKiller.sex, status: serverResponse.stats.sex },
+		{ val: guessedKiller.portrait, type: 'image', status: serverResponse.name },
+		{ val: guessedKiller.sex, type: 'text', status: serverResponse.stats.sex },
 		{
-			val: guessedKiller.terrorRadius.map((t) => `${t}m`).join('m, '),
+			val: guessedKiller.terrorRadius.map((t) => `${t}m`).join(', '),
+			type: 'text',
 			status: serverResponse.stats.terrorRadius,
 		},
 		{
 			val: guessedKiller.speed.map((s) => `${s}m/s`).join(', '),
+			type: 'text',
 			status: serverResponse.stats.speed,
 		},
-		{ val: guessedKiller.attackType.join(', '), status: serverResponse.stats.attackType },
-		{ val: guessedKiller.height, status: serverResponse.stats.height },
-		{ val: guessedKiller.origin, status: serverResponse.stats.origin },
+		{
+			val: guessedKiller.attackType.join(', '),
+			type: 'text',
+			status: serverResponse.stats.attackType,
+		},
+		{ val: guessedKiller.height, type: 'text', status: serverResponse.stats.height },
+		{ val: guessedKiller.origin, type: 'text', status: serverResponse.stats.origin },
 		{
 			val: `${guessedKiller.releaseYear} ${releaseYearDiff}`,
+			type: 'text',
 			status: serverResponse.stats.releaseYear,
 		},
 	];
@@ -73,7 +82,21 @@
 					}
 				}}
 			>
-				{cell.val}
+				{#if cell.type === 'image'}
+					<img
+						src={cell.val}
+						alt=""
+						class="h-full w-full rounded object-cover"
+						loading="lazy"
+						on:load={() => {
+							if (i === answers.length - 1) {
+								onDoneReveal();
+							}
+						}}
+					/>
+				{:else if cell.type === 'text'}
+					{cell.val}
+				{/if}
 				{#if i === answers.length - 1 && releaseYearDiff}
 					<span class="pointer-events-none absolute top-1 right-1 text-sm opacity-40">
 						{releaseYearDiff}

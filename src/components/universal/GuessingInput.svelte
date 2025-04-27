@@ -6,7 +6,7 @@
 </script>
 
 <div class="flex justify-center gap-1">
-	<div class="flex flex-col">
+	<div class="flex flex-col relative">
 		<input
 			type="text"
 			bind:value={input}

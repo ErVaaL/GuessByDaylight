@@ -20,7 +20,7 @@
 	});
 
 	const headers = [
-		{ val: 'Name' },
+		{ val: 'Killer' },
 		{ val: 'Sex' },
 		{ val: 'Terror Radius' },
 		{ val: 'Speed' },

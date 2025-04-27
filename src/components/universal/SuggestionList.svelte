@@ -23,21 +23,23 @@
 	}
 </script>
 
-{#if suggestions.length > 0}
-	<div class="flex flex-col gap-y-0.5">
-		{#each suggestions as item (item.name)}
-			<button
-				class="h-full w-full cursor-pointer rounded-lg bg-gray-600 p-2 text-left hover:bg-gray-800"
-				on:click={() => onSelect(item.name)}
-			>
-				<span class="text-white">
-					{#each highlightMatch(item.name) as { char, match }, i (i)}
-						<span class={match ? 'text-yellow-400' : ''}>
-							{char}
-						</span>
-					{/each}
-				</span>
-			</button>
-		{/each}
-	</div>
-{/if}
+<div class="absolute z-50 left-0 top-full mt-1 w-full">
+	{#if suggestions.length > 0}
+		<div class="flex flex-col gap-y-0.5">
+			{#each suggestions as item (item.name)}
+				<button
+					class="h-full w-full cursor-pointer rounded-lg bg-gray-600 p-2 text-left hover:bg-gray-800"
+					on:click={() => onSelect(item.name)}
+				>
+					<span class="text-white">
+						{#each highlightMatch(item.name) as { char, match }, i (i)}
+							<span class={match ? 'text-yellow-400' : ''}>
+								{char}
+							</span>
+						{/each}
+					</span>
+				</button>
+			{/each}
+		</div>
+	{/if}
+</div>
