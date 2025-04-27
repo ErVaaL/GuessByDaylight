@@ -10,7 +10,27 @@ export type BlindKillerResponse = {
 		origin: string;
 		releaseYear: string;
 	};
+	portrait: string;
 	isCorrect: boolean;
+};
+
+export type KillerFromDb = {
+	id: string;
+	name: string;
+	altNames: string[];
+	sex: string;
+	terrorRadius: number[];
+	speed: number[];
+	attackType: string[];
+	height: string;
+	origin: string;
+	releaseYear: number;
+	portrait: string;
+	terrorFar: string;
+	terrorMid: string;
+	terrorNear: string;
+	terrorChase: string;
+	emotes: string[];
 };
 
 export type Perk = {
