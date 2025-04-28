@@ -1,32 +1,46 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { perks } from '$lib/data/perks';
+import type { PerkFromDb } from '$lib/types';
+import { getDailyAnswer } from '$lib/utils/getDailyAnswer';
+import { supabaseServer } from '$lib/supabaseServer';
 
-const correctPerkName = 'Distressing';
-const correctPerk = perks.find((perk) => perk.name.toLowerCase() === correctPerkName.toLowerCase());
-
-if (!correctPerk) {
-	throw new Error(`Perk ${correctPerkName} not found`);
-}
+const correctPerk: PerkFromDb | null = null;
+const game = 'perk-killer';
 
 export const GET: RequestHandler = async () => {
-	return new Response(JSON.stringify(correctPerk), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
+	try {
+		const correct = (await getDailyAnswer(correctPerk, game)) as PerkFromDb;
+		if (!correct)
+			return new Response(JSON.stringify({ error: 'No correct answer found' }), { status: 404 });
+		return new Response(JSON.stringify(correct), {
+			status: 200,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+	} catch (error) {
+		console.error('Error fetching correct answer:', error);
+		return new Response(JSON.stringify({ error: 'Failed to fetch correct answer' }), {
+			status: 500,
+		});
+	}
 };
 
 export const POST: RequestHandler = async ({ request }) => {
+	const correct = await getDailyAnswer(correctPerk, game);
 	const { guess } = await request.json();
-	const guessedPerk = perks.find((perk) => perk.name.toLowerCase() === guess.toLowerCase());
-	if (!guessedPerk)
+	const { data: guessedPerk, error } = await supabaseServer
+		.from('Perks')
+		.select('*')
+		.eq('name', guess)
+		.single();
+
+	if (error || !guessedPerk)
 		return new Response(JSON.stringify({ error: 'Perk not found' }), { status: 404 });
 
 	const result = {
 		name: guessedPerk.name,
 		guess,
-		isCorrect: guessedPerk.name.toLowerCase() === correctPerk.name.toLowerCase(),
+		isCorrect: guessedPerk.id === correct.id,
 	};
 
 	return new Response(JSON.stringify(result), {
