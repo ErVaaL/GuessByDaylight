@@ -8,6 +8,7 @@
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import type { BlindKillerResponse } from '$lib/types';
 	import type { PageProps } from './$types';
+	import ScratchMarkLoader from '../../../components/ui/ScratchMarkLoader.svelte';
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
@@ -42,12 +43,16 @@
 </script>
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
-{#if !isCorrect && !$hasCompletedToday}
+<div class="flex flex-col items-center h-24">
+{#if $loading}
+	<ScratchMarkLoader />
+{:else if !isCorrect && !$hasCompletedToday}
 	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else if revealDone || $hasCompletedToday}
 	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
 	<GoNext location="/guess/emotes" />
 {/if}
+</div>
 
 <table class="table-fixed border-separate border-spacing-2">
 	<thead>
@@ -62,7 +67,7 @@
 			<BlindGuessResult
 				guessed={guess.guess}
 				serverResponse={guess as BlindKillerResponse}
-        killers={data.killers}
+				killers={data.killers}
 				onDoneReveal={() => {
 					revealDone = true;
 				}}

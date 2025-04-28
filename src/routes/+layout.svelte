@@ -1,14 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import ScratchMarkLoader from '../components/ui/ScratchMarkLoader.svelte';
 	import { loading } from '$lib/stores/loading';
-	import { onDestroy } from 'svelte';
-
-	let isLoading = $state(true);
-	const loadingStore = loading.subscribe((value: boolean) => {
-		isLoading = value;
-	});
-	onDestroy(loadingStore);
 
 	let { children, data } = $props();
 
@@ -45,13 +37,7 @@
 	<main class="grow">
 		<div class="flex justify-center">
 			<div class="flex min-h-screen w-4xl flex-col items-center gap-y-10 bg-[rgba(0,0,0,0.7)]">
-				{#if isLoading}
-					<div class="flex h-screen w-full items-center justify-center">
-						<ScratchMarkLoader />
-					</div>
-				{:else}
-					{@render children?.()}
-				{/if}
+				{@render children?.()}
 			</div>
 		</div>
 	</main>
