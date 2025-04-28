@@ -37,6 +37,7 @@
 			console.error('Error fetching emoji data:', error);
 		}
 	});
+  // TODO add loader when user is waiting for server response on guess
 </script>
 
 <h1 class="p-4 text-2xl font-bold">Guess the killer from the emotes</h1>

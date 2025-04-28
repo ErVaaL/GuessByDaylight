@@ -16,15 +16,19 @@ export const load = async () => {
 
 		const { data: perks, error: perksError } = await supabaseServer.from('Perks').select('*');
 
+
 		if (killersError) console.error('Error fetching killers:', killersError);
 		if (perksError) console.error('Error fetching perks:', perksError);
 		if (!killers || killers.length === 0) throw new Error('Failed to fetch killers');
 		if (!perks || perks.length === 0) throw new Error('Failed to fetch perks');
 
+		const survivorPerks = perks.filter((perk) => perk.side === 'survivor');
+		const killerPerks = perks.filter((perk) => perk.side === 'killer');
+
 		const randomBlind = killers[Math.floor(Math.random() * killers.length)];
 		const randomEmotes = killers[Math.floor(Math.random() * killers.length)];
-		const randomSurvivorPerk = perks[Math.floor(Math.random() * perks.length)];
-		const randomKillerPerk = perks[Math.floor(Math.random() * perks.length)];
+		const randomSurvivorPerk = survivorPerks[Math.floor(Math.random() * perks.length)];
+		const randomKillerPerk = killerPerks[Math.floor(Math.random() * perks.length)];
 		const randomTerror = killers[Math.floor(Math.random() * killers.length)];
 
 		const { error: insertError } = await supabaseServer.from('DailyAnswers').insert([
