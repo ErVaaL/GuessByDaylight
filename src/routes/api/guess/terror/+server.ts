@@ -12,9 +12,6 @@ export const GET: RequestHandler = async () => {
 		if (!correct)
 			return new Response(JSON.stringify({ error: 'No killer found' }), { status: 404 });
 
-    console.log(correct);
-    
-
 		const randomKillerTerrors: string[] = [
 			correct.terror_far,
 			correct.terror_mid,
