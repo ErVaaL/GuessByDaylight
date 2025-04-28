@@ -2,10 +2,12 @@
 	import { useGuessingGame } from '$lib/utils/useGuessingGame';
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import { useExcludedKillers } from '$lib/utils/useExcludedKillers';
+	import { loading } from '$lib/stores/loading';
 	import { ENDPOINTS } from '$lib/endopoints';
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import type { PageProps } from './$types';
+	import ScratchMarkLoader from '../../../components/ui/ScratchMarkLoader.svelte';
 
 	const accessEmotes = `${ENDPOINTS.BASE_GUESS}/emotes`;
 
@@ -33,11 +35,11 @@
 				localStorage.setItem('emotes_revealed', max.toString());
 				emotesRevealed?.set(max);
 			}
+			loading.set(false);
 		} catch (error) {
 			console.error('Error fetching emoji data:', error);
 		}
 	});
-  // TODO add loader when user is waiting for server response on guess
 </script>
 
 <h1 class="p-4 text-2xl font-bold">Guess the killer from the emotes</h1>
@@ -54,12 +56,16 @@
 		</div>
 	{/each}
 </div>
-{#if !$hasCompletedToday}
-	<GuessingInput list={$excludedKillers} {submitGuess} />
-{:else if revealDone || $hasCompletedToday}
-	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
-	<GoNext location="/guess/perk-survivor" />
-{/if}
+<div class="flex h-24 flex-col items-center">
+	{#if $loading}
+		<ScratchMarkLoader />
+	{:else if !$hasCompletedToday}
+		<GuessingInput list={$excludedKillers} {submitGuess} />
+	{:else if revealDone || $hasCompletedToday}
+		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+		<GoNext location="/guess/perk-survivor" />
+	{/if}
+</div>
 <div class="flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
 		<StandardGuessResult
