@@ -11,11 +11,15 @@ export const GET: RequestHandler = async () => {
 		const correct = (await getDailyAnswer(correctKiller, game)) as KillerFromDb;
 		if (!correct)
 			return new Response(JSON.stringify({ error: 'No killer found' }), { status: 404 });
+
+    console.log(correct);
+    
+
 		const randomKillerTerrors: string[] = [
-			correct.terrorFar,
-			correct.terrorMid,
-			correct.terrorNear,
-			correct.terrorChase,
+			correct.terror_far,
+			correct.terror_mid,
+			correct.terror_near,
+			correct.terror_chase,
 		];
 
 		return new Response(JSON.stringify(randomKillerTerrors), {

@@ -1,5 +1,6 @@
 import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb, PerkFromDb } from '$lib/types';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 async function getAnswer(game: string, answerId: string): Promise<KillerFromDb | null> {
 	if (game === 'perk-survivor' || game === 'perk-killer') {
@@ -15,17 +16,43 @@ async function getAnswer(game: string, answerId: string): Promise<KillerFromDb |
 
 		return perk;
 	} else {
-		const { data: killer, error } = await supabaseServer
-			.from('Killers')
-			.select('*')
-			.eq('id', answerId)
-			.single();
+		const { data: killer, error }: { data: KillerFromDb | null; error: PostgrestError | null } =
+			await supabaseServer
+				.from('Killers')
+				.select(
+					`
+        id,
+				name,
+        altNames,
+				sex,
+				terrorRadius,
+				speed,
+				attackType,
+				height,
+				origin,
+				releaseYear,
+				portrait,
+				terror_far(file_path),
+				terror_mid(file_path),
+				terror_near(file_path),
+				terror_chase(file_path),
+				emotes
+       `
+				)
+				.eq('id', answerId)
+				.single();
 
 		if (error || !killer) {
 			throw new Error(`Failed to fetch killer: ${error?.message}`);
 		}
 
-		return killer;
+		return {
+      ...killer,
+      terror_far: killer.terror_far?.file_path ?? '',
+      terror_mid: killer.terror_mid?.file_path ?? '',
+      terror_near: killer.terror_near?.file_path ?? '',
+      terror_chase: killer.terror_chase?.file_path ?? '',
+    } as KillerFromDb;
 	}
 }
 

@@ -6,24 +6,23 @@
 	import GuessingInput from '../../../components/universal/GuessingInput.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
+	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
-	import axios from 'axios';
 
 	const accessTerror = `${ENDPOINTS.BASE_GUESS}/terror`;
 
-	let volume = 0.5;
-	let terrorRadiusTable: string[] = [];
-	let currentPlaying: keyof typeof audioFiles | null = null;
-	let revealDone = false;
-	let audioFiles: Record<string, HTMLAudioElement> = {};
+	let { data }: PageProps = $props();
+
+	let volume = $state(0.5);
+	let currentPlaying: keyof typeof audioFiles | null = $state(null);
+	let revealDone = $state(false);
+	let audioFiles: Record<string, HTMLAudioElement> = $state({});
 
 	onMount(async () => {
 		try {
-			const res = await axios.get(accessTerror);
-			terrorRadiusTable = res.data;
-
+			const terrorRadiusTable = await data.terror;
 			audioFiles = terrorRadiusTable.reduce(
-				(acc, path, i) => {
+				(acc: Record<string, HTMLAudioElement>, path: string, i: number) => {
 					acc[i] = new Audio(path);
 					acc[i].volume = volume;
 					return acc;
@@ -61,13 +60,13 @@
 		currentPlaying = null;
 	};
 
-	$: {
+	$effect(() => {
 		for (const audio of Object.values(audioFiles)) {
 			audio.volume = volume;
 		}
-	}
+	});
 
-	const { excludedKillers } = useExcludedKillers(guesses);
+	const { excludedKillers } = useExcludedKillers(guesses, data.killers);
 
 	const playSound = (layer: string) => {
 		for (const [key, audio] of Object.entries(audioFiles)) {
@@ -105,7 +104,7 @@
       {i < ($terrorLayerUnlocked ?? 0)
 				? 'bg-gray-700 text-white hover:bg-gray-600'
 				: 'cursor-not-allowed bg-gray-500 text-gray-400'}"
-			on:click={() => {
+			onclick={() => {
 				if (i < ($terrorLayerUnlocked ?? 0)) playSound(layer);
 			}}
 			disabled={i >= ($terrorLayerUnlocked ?? 0)}

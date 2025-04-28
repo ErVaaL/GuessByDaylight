@@ -26,10 +26,10 @@ export type KillerFromDb = {
 	origin: string;
 	releaseYear: number;
 	portrait: string;
-	terrorFar: string;
-	terrorMid: string;
-	terrorNear: string;
-	terrorChase: string;
+	terror_far: string;
+	terror_mid: string;
+	terror_near: string;
+	terror_chase: string;
 	emotes: string[];
 };
 
