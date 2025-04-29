@@ -1,39 +1,51 @@
-# sv
+# Guess By Daylight
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## About
+This is a small web browser wordle like game that is themed on game Dead by Daylight.
 
-## Creating a project
+### Current version: beta-1.1
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Getting started
+
+Copy the project files to your local machine:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+git clone https://github.com/ErVaaL/GuessByDaylight.git
 ```
 
-## Developing
+Then navigate to the project directory:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```bash
+cd GuessByDaylight
+```
+Install the dependencies:
+
+```bash
+yarn install
+```
+
+or
+
+```bash
+npm install
+```
+
+Run the app:
+
+```bash
+yarn dev
+```
+or
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+The app uses Vite, so navigate to [http://localhost:5173/] in your browser to see the app.
 
-To create a production version of your app:
+## Disclaimer
+This project is not affiliated with or endorsed by Behaviour Interactive Inc. or Dead by Daylight. All rights reserved to their respective owners.
+This project is for entertainment purposes only, not for commercial use.
+No money is being made from this project.
 
-```bash
-npm run build
-```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-# GuessByDaylight
