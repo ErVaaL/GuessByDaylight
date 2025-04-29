@@ -69,7 +69,6 @@
 <div class="flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
 		<StandardGuessResult
-			guessed={guess.guess}
 			serverResponse={guess}
 			onDoneReveal={() => {
 				revealDone = true;

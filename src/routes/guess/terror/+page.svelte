@@ -13,7 +13,7 @@
 
 	let { data }: PageProps = $props();
 
-	let volume = $state(0.5);
+	let volume = $state(0.3);
 	let currentPlaying: keyof typeof audioFiles | null = $state(null);
 	let revealDone = $state(false);
 	let audioFiles: Record<string, HTMLAudioElement> = $state({});
@@ -141,7 +141,6 @@
 <div class="flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
 		<StandardGuessResult
-			guessed={guess.guess}
 			serverResponse={guess}
 			onDoneReveal={() => {
 				stopAllAudio();

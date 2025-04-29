@@ -37,7 +37,6 @@
 	<div class="flex flex-col-reverse gap-y-1">
 		{#each $guesses as guess (guess.name)}
 			<StandardGuessResult
-				guessed={guess.name}
 				serverResponse={guess}
 				onDoneReveal={() => {
 					if (guess.isCorrect) {

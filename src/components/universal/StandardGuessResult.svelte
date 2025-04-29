@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import type { StandardResponse } from '$lib/types';
-	import { normalizeName } from '$lib/utils/normalizeName';
 
-	export let guessed: string;
 	export let serverResponse: StandardResponse;
 	export let onDoneReveal: () => void = () => {};
 
@@ -17,7 +15,7 @@
 	};
 </script>
 
-{#if serverResponse.name !== '' && normalizeName(serverResponse.name) === guessed.toLowerCase()}
+{#if serverResponse.name !== ''}
 	<div
 		class={`flex h-10 w-64 items-center justify-center rounded-lg ${answerColor(
 			serverResponse.isCorrect
