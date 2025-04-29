@@ -41,7 +41,7 @@ or
 npm run dev
 ```
 
-The app uses Vite, so navigate to [http://localhost:5173/] in your browser to see the app.
+The app uses Vite, so navigate to ['http://localhost:5173/'] in your browser to see the app.
 
 ## Disclaimer
 This project is not affiliated with or endorsed by Behaviour Interactive Inc. or Dead by Daylight. All rights reserved to their respective owners.
