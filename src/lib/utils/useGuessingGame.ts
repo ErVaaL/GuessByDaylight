@@ -82,7 +82,6 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		if (guess.trim() === 'Skull Merchant') input = 'Skullmerchant';
 		if (guess.trim() === 'Dark Lord') input = 'Darklord';
 
-
 		try {
 			const res = await axios.post(options.apiEndpoint, { guess: input });
 			const data: BlindKillerResponse | StandardResponse = res.data;
