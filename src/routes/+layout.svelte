@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { cleanLocalStorage } from '$lib/utils/cleanLocalStorage';
 	import { loading } from '$lib/stores/loading';
 
 	let { children, data } = $props();
@@ -8,23 +9,7 @@
 		const serverDate = data.answers_date;
 		const lastResetDate = localStorage.getItem('lastResetDate');
 		if (lastResetDate !== serverDate) {
-			localStorage.removeItem('emotes_guess');
-			localStorage.removeItem('emotes_guess_correct');
-			localStorage.removeItem('blind_guesses');
-			localStorage.removeItem('blind_guess_correct');
-			localStorage.removeItem('survivor_perks_guess');
-			localStorage.removeItem('survivor_perks_guess_correct');
-			localStorage.removeItem('killer_perks_guess');
-			localStorage.removeItem('killer_perks_guess_correct');
-			localStorage.removeItem('terror_guess');
-			localStorage.removeItem('terror_guess_correct');
-			localStorage.removeItem('emotes_revealed');
-			localStorage.removeItem('survivor_perk_obscure_level');
-			localStorage.removeItem('killer_perk_obscure_level');
-			localStorage.removeItem('terror_layer_unlocked');
-			localStorage.removeItem('perk_random_tilt');
-
-			localStorage.setItem('lastResetDate', serverDate);
+			cleanLocalStorage(serverDate);
 		}
 		loading.set(false);
 	});
@@ -42,13 +27,14 @@
 		</div>
 	</main>
 	<footer
-		class="fixed right-0 bottom-0 left-0 border-t border-gray-800 bg-black px-4 py-6 text-center text-xs text-gray-400 opacity-70"
+		class="fixed right-0 bottom-0 left-0 border-t border-gray-800 bg-black p-0 text-center text-xs text-gray-400 opacity-70"
 	>
-		<p>
+		<p class="px-2 pt-2">
 			This is an unofficial fan-made game inspired by <strong>Dead by Daylight</strong>.<br />
 			All characters, icons, perks, and associated media belong to
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
+    <p class="text-left px-2 pb-2 text-gray-200 font-bold">version: beta-1.0</p>
 	</footer>
 </div>
