@@ -17,6 +17,8 @@
 	let mounted = false;
 	let delayBase = 300;
 
+  // TODO: Improve year arrow → bigger, more visible
+
 	const releaseYearDiff =
 		serverResponse.stats.releaseYear === 'earlier'
 			? '↓'
