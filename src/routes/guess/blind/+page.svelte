@@ -43,15 +43,15 @@
 </script>
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
-<div class="flex flex-col items-center h-24">
-{#if $loading}
-	<ScratchMarkLoader />
-{:else if !isCorrect && !$hasCompletedToday}
-	<GuessingInput list={$excludedKillers} {submitGuess} />
-{:else if revealDone || $hasCompletedToday}
-	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
-	<GoNext location="/guess/emotes" />
-{/if}
+<div class="flex h-24 flex-col items-center">
+	{#if $loading}
+		<ScratchMarkLoader />
+	{:else if !isCorrect && !$hasCompletedToday}
+		<GuessingInput list={$excludedKillers} {submitGuess} />
+	{:else if revealDone || $hasCompletedToday}
+		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+		<GoNext location="/guess/emotes" />
+	{/if}
 </div>
 
 <table class="table-fixed border-separate border-spacing-2">

@@ -5,9 +5,17 @@
 	let minutes = 0;
 	let seconds = 0;
 	let intervalId: ReturnType<typeof setInterval>;
+	let previousDate = new Date().getDate();
 
 	const calculateTime = () => {
 		const now = new Date();
+		const currentDate = now.getDate();
+
+		if (currentDate !== previousDate) {
+			window.location.href = '/';
+			return;
+		}
+
 		const nextDateChange = new Date();
 		nextDateChange.setHours(24, 0, 0, 0);
 

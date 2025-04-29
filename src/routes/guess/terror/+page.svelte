@@ -136,7 +136,7 @@
 	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else}
 	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
-	<GoNext location="/" />
+	<GoNext location="/" text="Finish" />
 {/if}
 <div class="flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
