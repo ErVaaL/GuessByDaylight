@@ -9,9 +9,7 @@ export const load = async () => {
 		.eq('answers_date', today)
 		.single();
 
-	if (error) console.error('Error fetching daily pick:', error);
-
-	if (!dailyPick) {
+	if (!dailyPick && error) {
 		const { data: killers, error: killersError } = await supabaseServer.from('Killers').select('*');
 
 		const { data: perks, error: perksError } = await supabaseServer.from('Perks').select('*');
