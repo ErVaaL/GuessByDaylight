@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
+	import { ArrowBigDown, ArrowBigUp } from 'lucide-svelte';
 	import type { BlindKillerResponse, KillerFromDb } from '$lib/types';
 
 	export let guessed: string;
@@ -17,14 +18,7 @@
 	let mounted = false;
 	let delayBase = 300;
 
-  // TODO: Improve year arrow → bigger, more visible
-
-	const releaseYearDiff =
-		serverResponse.stats.releaseYear === 'earlier'
-			? '↓'
-			: serverResponse.stats.releaseYear === 'later'
-				? '↑'
-				: '';
+	const releaseYearDiff = serverResponse.stats.releaseYear;
 
 	const answers = [
 		{ val: guessedKiller.portrait, type: 'image', status: serverResponse.name },
@@ -47,7 +41,7 @@
 		{ val: guessedKiller.height, type: 'text', status: serverResponse.stats.height },
 		{ val: guessedKiller.origin, type: 'text', status: serverResponse.stats.origin },
 		{
-			val: `${guessedKiller.releaseYear} ${releaseYearDiff}`,
+			val: `${guessedKiller.releaseYear}`,
 			type: 'text',
 			status: serverResponse.stats.releaseYear,
 		},
@@ -77,7 +71,7 @@
 		{#if mounted}
 			<td
 				in:scale={{ delay: i * delayBase, duration: 200 }}
-				class={`h-16 w-16 rounded border text-center text-xs font-bold text-white ${setBg(cell.status)}`}
+				class={`relative h-16 w-16 overflow-hidden rounded border text-center font-bold text-white ${setBg(cell.status)}`}
 				on:introend={() => {
 					if (serverResponse.isCorrect && i === answers.length - 1) {
 						onDoneReveal();
@@ -97,12 +91,15 @@
 						}}
 					/>
 				{:else if cell.type === 'text'}
-					{cell.val}
+					<span class="relative z-10 text-[0.85rem] font-bold">{cell.val}</span>
 				{/if}
-				{#if i === answers.length - 1 && releaseYearDiff}
-					<span class="pointer-events-none absolute top-1 right-1 text-sm opacity-40">
-						{releaseYearDiff}
-					</span>
+
+				{#if i === answers.length - 1}
+					{#if releaseYearDiff === 'earlier'}
+						<ArrowBigDown class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none text-black" />
+					{:else if releaseYearDiff === 'later'}
+						<ArrowBigUp class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none text-black" />
+					{/if}
 				{/if}
 			</td>
 		{/if}
