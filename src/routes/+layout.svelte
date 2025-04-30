@@ -11,6 +11,7 @@
 		const lastResetDate = localStorage.getItem('lastResetDate');
 		if (lastResetDate !== serverDate) {
 			cleanLocalStorage(serverDate);
+			window.location.href = '/';
 		}
 		loading.set(false);
 	});
