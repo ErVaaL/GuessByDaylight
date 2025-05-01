@@ -34,7 +34,7 @@
 		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
 		<GoNext location="/guess/terror" />
 	{/if}
-	<div class="flex flex-col-reverse gap-y-1">
+	<div class="flex flex-col-reverse my-2 gap-y-2">
 		{#each $guesses as guess (guess.name)}
 			<StandardGuessResult
 				serverResponse={guess}

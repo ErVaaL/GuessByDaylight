@@ -54,7 +54,7 @@
 	{/if}
 </div>
 
-<table class="table-fixed border-separate border-spacing-2">
+<table class="border-separate border-spacing-2 overflow-auto">
 	<thead>
 		<tr>
 			{#each headers as header (header.val)}
@@ -62,7 +62,7 @@
 			{/each}
 		</tr>
 	</thead>
-	<tbody>
+	<tbody class="overflow-scroll table-auto">
 		{#each $guesses as guess (guess.guess)}
 			<BlindGuessResult
 				guessed={guess.guess}

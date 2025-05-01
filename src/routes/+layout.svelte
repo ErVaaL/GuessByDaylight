@@ -18,20 +18,18 @@
 </script>
 
 <div
-	class="min-h-screen bg-black font-sans text-white"
+	class="flex h-full min-h-screen flex-col bg-black font-sans text-white"
 	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center;"
 >
-	<main class="grow">
-		<div class="flex justify-center">
-			<div class="flex min-h-screen w-4xl flex-col items-center gap-y-8 bg-[rgba(0,0,0,0.7)]">
-				<h1 class="mt-2 px-4 text-center text-3xl font-bold">Guess by Daylight</h1>
-				<TimerTillReset />
-				{@render children?.()}
-			</div>
+	<div class="flex h-full grow justify-center">
+		<div class="flex w-4xl flex-col items-center gap-y-8 bg-[rgba(0,0,0,0.7)]">
+			<h1 class="mt-2 px-4 text-center text-3xl font-bold">Guess by Daylight</h1>
+			<TimerTillReset />
+			{@render children?.()}
 		</div>
-	</main>
+	</div>
 	<footer
-		class="fixed right-0 bottom-0 left-0 border-t border-gray-800 bg-black p-0 text-center text-xs text-gray-400 opacity-70"
+		class="relative border-t border-gray-800 bg-black p-0 text-center text-xs text-gray-400 opacity-70"
 	>
 		<p class="px-2 pt-2">
 			This is an unofficial fan-made game inspired by <strong>Dead by Daylight</strong>.<br />
@@ -39,6 +37,6 @@
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
-		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.1</p>
+		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.2</p>
 	</footer>
 </div>
