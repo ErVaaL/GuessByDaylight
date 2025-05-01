@@ -46,7 +46,7 @@
 <div class="grid h-40 w-4/5 grid-cols-3 items-center border-y-2 border-y-red-300">
 	{#each data.emotes as code, i (code)}
 		<div
-			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-400"
+			class="flex h-14 w-14 items-center justify-center place-self-center rounded-full bg-gray-800"
 		>
 			{#if i < $emotesRevealed! || $hasCompletedToday}
 				<span class="emoji-text self-center text-4xl text-black">{fromUnicodeToEmoji(code)}</span>
