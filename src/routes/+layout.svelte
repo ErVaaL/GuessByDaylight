@@ -37,6 +37,6 @@
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
-		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.1</p>
+		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.2</p>
 	</footer>
 </div>
