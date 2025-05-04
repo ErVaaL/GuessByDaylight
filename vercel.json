@@ -1,0 +1,9 @@
+{
+  "crons": [
+    {
+      "path": "/api/guess/initiate-daily",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
+

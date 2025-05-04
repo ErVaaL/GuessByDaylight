@@ -21,3 +21,15 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Supabase
+.supabase/
+supabase/.temp/
+
+# Supabase access tokens and env
+supabase/.env
+
+# Edge Function build artifacts
+supabase/functions/**/dist/
+supabase/functions/**/build/
+supabase/functions/**/.output/

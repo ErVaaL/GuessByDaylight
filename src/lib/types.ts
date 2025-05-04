@@ -14,6 +14,15 @@ export type BlindKillerResponse = {
 	isCorrect: boolean;
 };
 
+export type DailyPick = {
+	answers_date: string;
+	blind_killer_id: string;
+	emotes_killer_id: string;
+	survivor_perk_id: number;
+	killer_perk_id: number;
+	terror_killer_id: string;
+};
+
 export type KillerFromDb = {
 	id: string;
 	name: string;
@@ -34,14 +43,13 @@ export type KillerFromDb = {
 };
 
 export type PerkFromDb = {
-  id: number;
-  name: string;
-  side: string;
-  icon: string;
-  survivor_id?: string;
-  killer_id?: string;
-}
-
+	id: number;
+	name: string;
+	side: string;
+	icon: string;
+	survivor_id?: string;
+	killer_id?: string;
+};
 
 export type StandardResponse = {
 	name: string;
