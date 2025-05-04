@@ -1,7 +1,9 @@
+import { initiateDailyAnswers } from '$lib/server/initiateDailyAnswers';
 import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb, PerkFromDb } from '$lib/types';
+import type { LayoutServerLoad } from './$types';
 
-export const load = async () => {
+export const load: LayoutServerLoad = async ({ cookies }) => {
 	const {
 		data: killers,
 		error: killersError,
@@ -15,8 +17,20 @@ export const load = async () => {
 		throw new Error(`Failed to fetch killers: ${killersError?.message}`);
 	if (perksError || !perks) throw new Error(`Failed to fetch perks: ${perksError?.message}`);
 
+	const { dailyPick } = await initiateDailyAnswers();
+	const today = dailyPick.answers_date;
+
+	cookies.set('lastResetDate', today, {
+		path: '/',
+		httpOnly: false,
+		sameSite: 'lax',
+		secure: true,
+		maxAge: 60 * 60 * 24,
+	});
+
 	return {
 		killers: killers,
 		perks: perks,
+		today,
 	};
 };

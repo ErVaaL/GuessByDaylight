@@ -1,8 +1,17 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import TimerTillReset from '../components/universal/TimerTillReset.svelte';
+	import { cleanLocalStorage } from '$lib/utils/cleanLocalStorage';
 
-	let { children } = $props();
+	let { children, data } = $props();
+
+	onMount(() => {
+		const lastReset = localStorage.getItem('lastResetDate');
+		if (lastReset != data.today) {
+			cleanLocalStorage(data.today);
+		}
+	});
 </script>
 
 <div
@@ -12,7 +21,7 @@
 	<div class="flex h-full grow justify-center">
 		<div class="flex w-4xl flex-col items-center gap-y-8 bg-[rgba(0,0,0,0.7)]">
 			<h1 class="mt-2 px-4 text-center text-3xl font-bold">Guess by Daylight</h1>
-			<TimerTillReset />
+			<TimerTillReset today={data.today} />
 			{@render children?.()}
 		</div>
 	</div>
@@ -25,6 +34,6 @@
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
-		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.2</p>
+		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.3</p>
 	</footer>
 </div>

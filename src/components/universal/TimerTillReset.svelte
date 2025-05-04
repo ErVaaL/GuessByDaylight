@@ -1,26 +1,24 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
+	export let today: string;
 
 	let hours = 0;
 	let minutes = 0;
 	let seconds = 0;
 	let intervalId: ReturnType<typeof setInterval>;
-	let previousDate = new Date().getDate();
 
 	const calculateTime = () => {
 		const now = new Date();
-		const currentDate = now.getDate();
+		const target = new Date(`${today}T00:00:00Z`);
+		target.setUTCDate(target.getUTCDate() + 1);
 
-		if (currentDate !== previousDate) {
+		const diffMs = target.getTime() - now.getTime();
+		const diffSeconds = Math.floor(diffMs / 1000);
+
+		if (diffSeconds <= 0) {
 			window.location.href = '/';
 			return;
 		}
-
-		const nextDateChange = new Date();
-		nextDateChange.setHours(24, 0, 0, 0);
-
-		const diffMs = nextDateChange.getTime() - now.getTime();
-		const diffSeconds = Math.floor(diffMs / 1000);
 
 		hours = Math.floor(diffSeconds / 3600);
 		minutes = Math.floor((diffSeconds % 3600) / 60);
