@@ -1,20 +1,8 @@
 <script lang="ts">
 	import '../app.css';
-	import { cleanLocalStorage } from '$lib/utils/cleanLocalStorage';
-	import { loading } from '$lib/stores/loading';
 	import TimerTillReset from '../components/universal/TimerTillReset.svelte';
 
-	let { children, data } = $props();
-
-	$effect(() => {
-		const serverDate = data.answers_date;
-		const lastResetDate = localStorage.getItem('lastResetDate');
-		if (lastResetDate !== serverDate) {
-			cleanLocalStorage(serverDate);
-			window.location.href = '/';
-		}
-		loading.set(false);
-	});
+	let { children } = $props();
 </script>
 
 <div

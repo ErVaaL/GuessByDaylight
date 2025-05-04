@@ -1,52 +1,22 @@
 import { supabaseServer } from '$lib/supabaseServer';
+import type { KillerFromDb, PerkFromDb } from '$lib/types';
 
 export const load = async () => {
-	const today = new Date().toISOString().split('T')[0];
+	const {
+		data: killers,
+		error: killersError,
+	}: { data: KillerFromDb[] | null; error: Error | null } = await supabaseServer
+		.from('Killers')
+		.select('*');
+	const { data: perks, error: perksError }: { data: PerkFromDb[] | null; error: Error | null } =
+		await supabaseServer.from('Perks').select('*');
 
-	const { data: dailyPick, error } = await supabaseServer
-		.from('DailyAnswers')
-		.select('answers_date')
-		.eq('answers_date', today)
-		.single();
-
-	if (!dailyPick) {
-		const { data: killers, error: killersError } = await supabaseServer.from('Killers').select('*');
-
-		const { data: perks, error: perksError } = await supabaseServer.from('Perks').select('*');
-
-
-		if (killersError) console.error('Error fetching killers:', killersError);
-		if (perksError) console.error('Error fetching perks:', perksError);
-		if (!killers || killers.length === 0) throw new Error('Failed to fetch killers');
-		if (!perks || perks.length === 0) throw new Error('Failed to fetch perks');
-
-		const survivorPerks = perks.filter((perk) => perk.side === 'survivor');
-		const killerPerks = perks.filter((perk) => perk.side === 'killer');
-
-		const randomBlind = killers[Math.floor(Math.random() * killers.length)];
-		const randomEmotes = killers[Math.floor(Math.random() * killers.length)];
-		const randomSurvivorPerk = survivorPerks[Math.floor(Math.random() * perks.length)];
-		const randomKillerPerk = killerPerks[Math.floor(Math.random() * perks.length)];
-		const randomTerror = killers[Math.floor(Math.random() * killers.length)];
-
-		const { error: insertError } = await supabaseServer.from('DailyAnswers').insert([
-			{
-				answers_date: today,
-				blind_killer_id: randomBlind.id,
-				emotes_killer_id: randomEmotes.id,
-				survivor_perk_id: randomSurvivorPerk.id,
-				killer_perk_id: randomKillerPerk.id,
-				terror_killer_id: randomTerror.id,
-			},
-		]);
-
-		if (insertError) {
-			console.error('Error inserting daily pick:', insertError);
-			throw new Error('Failed to insert daily pick');
-		}
-	}
+	if (killersError || !killers)
+		throw new Error(`Failed to fetch killers: ${killersError?.message}`);
+	if (perksError || !perks) throw new Error(`Failed to fetch perks: ${perksError?.message}`);
 
 	return {
-		answers_date: today,
+		killers: killers,
+		perks: perks,
 	};
 };
