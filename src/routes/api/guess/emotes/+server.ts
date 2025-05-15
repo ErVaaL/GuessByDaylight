@@ -1,5 +1,4 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb } from '$lib/types';
 import { getDailyAnswer } from '$lib/utils/getDailyAnswer';
 
@@ -8,7 +7,7 @@ const game = 'emotes';
 
 export const GET: RequestHandler = async () => {
 	try {
-		const correct = await getDailyAnswer(correctKiller, game) as KillerFromDb;
+		const correct = (await getDailyAnswer(correctKiller, game)) as KillerFromDb;
 
 		if (!correct)
 			return new Response(JSON.stringify({ error: 'No killer found' }), { status: 404 });
@@ -30,16 +29,13 @@ export const GET: RequestHandler = async () => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const correct = await getDailyAnswer(correctKiller, game);
-	const { guess } = await request.json();
-	const { data: guessedKiller, error }: { data: KillerFromDb | null; error: Error | null } =
-		await supabaseServer.from('Killers').select('*').eq('id', guess.toLowerCase()).single();
-
-	if (!guessedKiller || error)
-		return new Response(JSON.stringify({ error: 'Killer not found' }), { status: 404 });
+	const { guess: guessedKiller } = await request.json();
+	if (!guessedKiller || !guessedKiller.id)
+		return new Response(JSON.stringify({ error: 'Invalid killer' }), { status: 400 });
 
 	const result = {
 		name: guessedKiller.name,
-		guess,
+		guess: guessedKiller.id,
 		isCorrect: guessedKiller.id === correct.id,
 	};
 

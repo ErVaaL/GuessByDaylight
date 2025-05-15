@@ -11,18 +11,9 @@ getDailyAnswer(correctKiller, game);
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { guess } = await request.json();
-		const {
-			data: guessedKiller,
-			error,
-		}: { data: KillerFromDb | null; error: PostgrestError | null } = await supabaseServer
-			.from('Killers')
-			.select('*')
-			.eq('id', guess.toLowerCase())
-			.single();
-
-		if (error || !guessedKiller) {
-			return new Response(JSON.stringify({ error: 'Killer not found' }), { status: 404 });
+		const { guess: guessedKiller } = await request.json();
+		if (!guessedKiller || !guessedKiller.id) {
+			return new Response(JSON.stringify({ error: 'No guess provided' }), { status: 400 });
 		}
 
 		const correct = await getDailyAnswer(correctKiller, game);
@@ -34,7 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const result: BlindKillerResponse = {
 			name: guessedKiller.name,
-			guess: guess,
+			guess: guessedKiller,
 			stats: {
 				sex: guessedKiller.sex === correct.sex ? 'correct' : 'incorrect',
 				terrorRadius: compareArrayStat(guessedKiller.terrorRadius, correct.terrorRadius),

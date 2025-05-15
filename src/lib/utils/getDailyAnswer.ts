@@ -2,7 +2,9 @@ import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb, PerkFromDb } from '$lib/types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
-async function getAnswer(game: string, answerId: string): Promise<KillerFromDb | null> {
+const answerCache: Record<string, { date: string; answer: KillerFromDb | PerkFromDb }> = {};
+
+async function getAnswer(game: string, answerId: string): Promise<KillerFromDb | PerkFromDb> {
 	if (game === 'perk-survivor' || game === 'perk-killer') {
 		const { data: perk, error } = await supabaseServer
 			.from('Perks')
@@ -42,17 +44,15 @@ async function getAnswer(game: string, answerId: string): Promise<KillerFromDb |
 				.eq('id', answerId)
 				.single();
 
-		if (error || !killer) {
-			throw new Error(`Failed to fetch killer: ${error?.message}`);
-		}
+		if (error || !killer) throw new Error(`Failed to fetch killer: ${error?.message}`);
 
 		return {
-      ...killer,
-      terror_far: killer.terror_far?.file_path ?? '',
-      terror_mid: killer.terror_mid?.file_path ?? '',
-      terror_near: killer.terror_near?.file_path ?? '',
-      terror_chase: killer.terror_chase?.file_path ?? '',
-    } as KillerFromDb;
+			...killer,
+			terror_far: killer.terror_far?.file_path ?? '',
+			terror_mid: killer.terror_mid?.file_path ?? '',
+			terror_near: killer.terror_near?.file_path ?? '',
+			terror_chase: killer.terror_chase?.file_path ?? '',
+		} as KillerFromDb;
 	}
 }
 
@@ -61,16 +61,19 @@ export async function getDailyAnswer(
 	game: string
 ): Promise<KillerFromDb | PerkFromDb> {
 	if (correctAnswer) return correctAnswer;
+
 	const today = new Date().toISOString().split('T')[0];
+
+	const cached = answerCache[game];
+	if (cached && cached.date === today) return cached.answer;
+
 	const { data: correct, error } = await supabaseServer
 		.from('DailyAnswers')
 		.select('*')
 		.eq('answers_date', today)
 		.single();
 
-	if (error || !correct) {
-		throw new Error(`Failed to fetch daily killer: ${error?.message}`);
-	}
+	if (error || !correct) throw new Error(`Failed to fetch daily killer: ${error?.message}`);
 
 	let answerId: string | null = null;
 
@@ -98,5 +101,7 @@ export async function getDailyAnswer(
 
 	const answer = await getAnswer(game, answerId);
 	if (!answer) throw new Error(`No answer found for game type: ${game}`);
+
+	answerCache[game] = { date: today, answer };
 	return answer;
 }

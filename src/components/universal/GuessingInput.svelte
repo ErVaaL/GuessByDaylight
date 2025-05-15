@@ -1,8 +1,9 @@
 <script lang="ts">
+	import type { KillerFromDb, PerkFromDb } from '$lib/types';
 	import ScratchMarkLoader from '../ui/ScratchMarkLoader.svelte';
 	import SuggestionList from './SuggestionList.svelte';
 	export let list: Array<{ name: string; altNames?: string[] }> = [];
-	export let submitGuess: (input: string) => void;
+	export let submitGuess: (item: KillerFromDb | PerkFromDb) => void;
 	let input = '';
 	let loading = false;
 </script>
@@ -24,7 +25,8 @@
 				onSelect={(name) => {
 					loading = true;
 					input = name;
-					submitGuess(input);
+					const item = list.find((item) => item.name === name);
+					submitGuess(item);
 					input = '';
 					loading = false;
 				}}
@@ -34,6 +36,9 @@
 
 	<button
 		class="my-4 h-10 w-10 rounded-lg bg-gray-600 transition-all duration-150 hover:cursor-pointer hover:bg-gray-800"
-		on:click={() => submitGuess(input)}>→</button
+		on:click={() => {
+			const item = list.find((item) => item.name === input);
+			submitGuess(item);
+		}}>→</button
 	>
 </div>

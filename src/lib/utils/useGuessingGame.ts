@@ -1,6 +1,6 @@
 import { onMount } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
-import type { BlindKillerResponse, StandardResponse } from '$lib/types';
+import type { BlindKillerResponse, KillerFromDb, PerkFromDb, StandardResponse } from '$lib/types';
 import axios from 'axios';
 
 type UseGuessingGameOptions = {
@@ -72,18 +72,11 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 		}
 	});
 
-	const submitGuess = async (guess: string) => {
-		if (!guess) return;
-
-		let input = guess.trim();
-
-		if (guess.trim() === 'Good Guy') input = 'Goodguy';
-		if (guess.trim() === 'Ghost Face') input = 'Ghostface';
-		if (guess.trim() === 'Skull Merchant') input = 'Skullmerchant';
-		if (guess.trim() === 'Dark Lord') input = 'Darklord';
+	const submitGuess = async (guessObj: KillerFromDb | PerkFromDb) => {
+		if (!guessObj || !guessObj.id) return;
 
 		try {
-			const res = await axios.post(options.apiEndpoint, { guess: input });
+			const res = await axios.post(options.apiEndpoint, { guess: guessObj });
 			const data: BlindKillerResponse | StandardResponse = res.data;
 
 			guesses.update((prev) => {
@@ -151,7 +144,7 @@ export const useGuessingGame = (options: UseGuessingGameOptions) => {
 	return {
 		guesses,
 		hasCompletedToday,
-		submitGuess,
+		submitGuess: submitGuess as (killerOrPerk: KillerFromDb | PerkFromDb) => Promise<void>,
 		...(isEmoteGame && { emotesRevealed }),
 		...(isSurvivorPerkGame && { survivorPerkObscureLevel }),
 		...(isKillerPerkGame && { killerPerkObscureLevel }),

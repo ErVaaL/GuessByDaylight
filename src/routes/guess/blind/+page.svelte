@@ -65,7 +65,7 @@
 	<tbody class="overflow-scroll table-auto">
 		{#each $guesses as guess (guess.guess)}
 			<BlindGuessResult
-				guessed={guess.guess}
+				guessed={guess.guess.id}
 				serverResponse={guess as BlindKillerResponse}
 				killers={data.killers}
 				onDoneReveal={() => {

@@ -1,6 +1,6 @@
 export type BlindKillerResponse = {
 	name: string;
-	guess: string;
+	guess: KillerFromDb;
 	stats: {
 		sex: string;
 		terrorRadius: string;
@@ -53,7 +53,7 @@ export type PerkFromDb = {
 
 export type StandardResponse = {
 	name: string;
-	guess: string;
+	guess: KillerFromDb;
 	isCorrect: boolean;
 };
 
