@@ -1,4 +1,3 @@
-import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb } from '$lib/types';
 import { getDailyAnswer } from '$lib/utils/getDailyAnswer';
 import type { RequestHandler } from '@sveltejs/kit';
@@ -35,16 +34,14 @@ export const GET: RequestHandler = async () => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const correct = await getDailyAnswer(correctKiller, game);
-	const { guess } = await request.json();
-	const { data: guessedKiller, error }: { data: KillerFromDb | null; error: Error | null } =
-		await supabaseServer.from('Killers').select('*').eq('id', guess.toLowerCase()).single();
+	const { guess: guessedKiller } = await request.json();
 
-	if (!guessedKiller || error)
+	if (!guessedKiller || !guessedKiller.id)
 		return new Response(JSON.stringify({ error: 'Killer not found' }), { status: 404 });
 
 	const result = {
 		name: guessedKiller.name,
-		guess,
+		guess: guessedKiller.id,
 		isCorrect: guessedKiller.id === correct.id,
 	};
 

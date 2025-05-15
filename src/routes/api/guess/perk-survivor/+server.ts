@@ -1,7 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { PerkFromDb } from '$lib/types';
 import { getDailyAnswer } from '$lib/utils/getDailyAnswer';
-import { supabaseServer } from '$lib/supabaseServer';
 
 const correctPerk: PerkFromDb | null = null;
 const game = 'perk-survivor';
@@ -28,19 +27,14 @@ export const GET: RequestHandler = async () => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const correct = await getDailyAnswer(correctPerk, game);
-	const { guess } = await request.json();
-	const { data: guessedPerk, error } = await supabaseServer
-		.from('Perks')
-		.select('*')
-		.eq('name', guess)
-		.single();
+	const { guess: guessedPerk } = await request.json();
 
-	if (error || !guessedPerk)
+	if (!guessedPerk || !guessedPerk.id)
 		return new Response(JSON.stringify({ error: 'Perk not found' }), { status: 404 });
 
 	const result = {
 		name: guessedPerk.name,
-		guess,
+		guess: guessedPerk.id,
 		isCorrect: guessedPerk.id === correct.id,
 	};
 
