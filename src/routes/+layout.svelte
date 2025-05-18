@@ -7,10 +7,25 @@
 
 	let { children, data } = $props();
 
+	let header: HTMLElement;
+	let observerTarget: HTMLElement;
+	let isFloating = $state(false);
+
 	onMount(() => {
 		const lastReset = localStorage.getItem('lastResetDate');
 		if (lastReset != data.today) {
 			cleanLocalStorage(data.today);
+		}
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				isFloating = !entry.isIntersecting;
+			},
+			{ threshold: 0 }
+		);
+
+		if (observerTarget) {
+			observer.observe(observerTarget);
 		}
 	});
 </script>
@@ -19,11 +34,17 @@
 	class="flex h-full min-h-screen flex-col bg-black font-sans text-white"
 	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center; background-attachment: fixed;"
 >
+	<div class="h-14" class:hidden={!isFloating}></div>
 	<header
-		class="relative flex h-14 items-center gap-x-4 border-b border-gray-800 bg-[rgba(0,0,0,0.7)] p-2 text-white"
+		bind:this={header}
+		class="z-40 flex h-14 items-center gap-x-4 border-b border-gray-800 bg-[rgba(0,0,0,0.7)] p-2 text-white transition-all duration-300"
+		class:floating={isFloating}
 	>
 		<Navbar />
 	</header>
+
+	<div bind:this={observerTarget} class="h-0 w-full"></div>
+
 	<div class="flex h-full grow justify-center">
 		<div class="flex w-4xl flex-col items-center gap-y-8 bg-[rgba(0,0,0,0.7)]">
 			<h1 class="mt-2 px-4 text-center text-3xl font-bold">Guess by Daylight</h1>
@@ -43,3 +64,12 @@
 		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.4</p>
 	</footer>
 </div>
+
+<style>
+	header.floating {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+</style>

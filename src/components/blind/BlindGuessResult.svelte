@@ -96,9 +96,13 @@
 
 				{#if i === answers.length - 1}
 					{#if releaseYearDiff === 'earlier'}
-						<ArrowBigDown class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none text-black" />
+						<ArrowBigDown
+							class="pointer-events-none absolute top-1/2 left-1/2 z-0 h-20 w-20 -translate-x-1/2 -translate-y-1/2 text-black"
+						/>
 					{:else if releaseYearDiff === 'later'}
-						<ArrowBigUp class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none text-black" />
+						<ArrowBigUp
+							class="pointer-events-none absolute top-1/2 left-1/2 z-0 h-20 w-20 -translate-x-1/2 -translate-y-1/2 text-black"
+						/>
 					{/if}
 				{/if}
 			</td>
