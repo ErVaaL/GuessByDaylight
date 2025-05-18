@@ -1,9 +1,9 @@
 # Guess By Daylight
+v1.0
 
 ## About
 This is a small web browser wordle like game that is themed on game Dead by Daylight.
-
-### Current version: beta-1.1
+Will be working on adding more features and improving the game.
 
 ## Getting started
 
@@ -42,6 +42,19 @@ npm run dev
 ```
 
 The app uses Vite, so navigate to http://localhost:5173/ in your browser to see the app.
+
+## API endpoints:
+- `/api/guess/**` - main endpoint for 5 different guessing games:
+
+  - `/blind` - checks and returns the answer to guess for blind game
+  - `/emotes` - checks and returns the answer to guess for emotes game
+  - `/perk-survivor` - checks and returns the answer to guess for survivor perk game
+  - `/perk-killer` - checks and returns the answer to guess for killer perk game
+  - `/terror` - checks and returns the answer to guess for terror radius game
+
+  - `/initiate-daily` - generates a new daily challenge
+
+- `/api/killer` - returns a list of killers (currently not used)
 
 ## Disclaimer
 This project is not affiliated with or endorsed by Behaviour Interactive Inc. or Dead by Daylight. All rights reserved to their respective owners.

@@ -4,6 +4,7 @@
 	import TimerTillReset from '../components/universal/TimerTillReset.svelte';
 	import { cleanLocalStorage } from '$lib/utils/cleanLocalStorage';
 	import Navbar from '../components/layout/Navbar.svelte';
+	import { Github } from 'lucide-svelte';
 
 	let { children, data } = $props();
 
@@ -61,7 +62,18 @@
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
-		<p class="px-2 pb-2 text-left font-bold text-gray-200">version: beta-1.4</p>
+		<div class="flex w-full">
+			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.0</div>
+			<div class="flex-end w-min self-end px-2 pb-2 text-right font-bold text-white">
+				<a
+					href="https://github.com/ErVaaL/GuessByDaylight"
+					target="_blank"
+					rel="noopener noreferrer"
+					title="Visit official GitHub!"
+					class="transition-colors duration-150 hover:text-gray-400"><Github /></a
+				>
+			</div>
+		</div>
 	</footer>
 </div>
 

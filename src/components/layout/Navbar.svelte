@@ -51,7 +51,11 @@
 			<Home />
 		</button>
 
-		<button class="" onclick={toggleMenu} aria-label="Toggle menu">
+		<button
+			class="transition-colors duration-150 hover:text-gray-400"
+			onclick={toggleMenu}
+			aria-label="Toggle menu"
+		>
 			<div class="burger" class:open={$isOpen}>
 				<div class="burger-line line1"></div>
 				<div class="burger-line line2"></div>
@@ -104,6 +108,7 @@
 			transform 0.3s ease,
 			opacity 0.3s ease;
 	}
+
 	.burger.open .line1 {
 		transform: rotate(45deg) translateY(12.5px);
 	}
