@@ -13,6 +13,10 @@
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
+	if (typeof window !== 'undefined' && location.pathname.startsWith('/guess')) {
+		sessionStorage.setItem('lastGuessRoute', location.pathname);
+	}
+
 	let { data }: PageProps = $props();
 
 	const { guesses, hasCompletedToday, submitGuess } = useGuessingGame({

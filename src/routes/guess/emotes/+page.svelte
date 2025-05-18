@@ -10,6 +10,10 @@
 	import ScratchMarkLoader from '../../../components/ui/ScratchMarkLoader.svelte';
 	import CorrectPortrait from '../../../components/universal/CorrectPortrait.svelte';
 
+	if (typeof window !== 'undefined' && location.pathname.startsWith('/guess')) {
+		sessionStorage.setItem('lastGuessRoute', location.pathname);
+	}
+
 	const accessEmotes = `${ENDPOINTS.BASE_GUESS}/emotes`;
 
 	let { data }: PageProps = $props();

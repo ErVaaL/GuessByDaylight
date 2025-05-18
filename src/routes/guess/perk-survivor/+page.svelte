@@ -11,6 +11,10 @@
 
 	const perkEndpoint = `${ENDPOINTS.BASE_GUESS}/perk-survivor`;
 
+	if (typeof window !== 'undefined' && location.pathname.startsWith('/guess')) {
+		sessionStorage.setItem('lastGuessRoute', location.pathname);
+	}
+
 	let { data }: PageProps = $props();
 
 	let onDoneReveal = $state(false);

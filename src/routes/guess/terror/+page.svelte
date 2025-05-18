@@ -12,6 +12,10 @@
 
 	const accessTerror = `${ENDPOINTS.BASE_GUESS}/terror`;
 
+	if (typeof window !== 'undefined' && location.pathname.startsWith('/guess')) {
+		sessionStorage.setItem('lastGuessRoute', location.pathname);
+	}
+
 	let { data }: PageProps = $props();
 
 	let volume = $state(0.3);

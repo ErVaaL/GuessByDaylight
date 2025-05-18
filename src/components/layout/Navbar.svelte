@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { EyeOff, Footprints, Home, Music4, Skull, Smile } from 'lucide-svelte';
 	import { writable } from 'svelte/store';
 
@@ -36,37 +37,53 @@
 		isOpen.set(false);
 		goto(path);
 	};
+	$: currentPath = $page.url.pathname;
+
+	const handleButton = () => {
+		const last = sessionStorage.getItem('lastGuessRoute');
+		goto(last || '/');
+	};
 </script>
 
-<nav class="flex h-14 w-full items-center gap-x-4 px-4 text-white">
-	<button onclick={() => goto('/')} class="flex cursor-pointer items-center gap-1">
-		<Home />
-	</button>
+<nav class="flex h-14 w-full items-center gap-x-4 px-0 text-white">
+	<div class="flex h-14 w-1/3 items-center gap-x-4 px-4 text-white">
+		<button onclick={() => goto('/')} class="flex cursor-pointer items-center gap-1">
+			<Home />
+		</button>
 
-	<button class="" onclick={toggleMenu} aria-label="Toggle menu">
-		<div class="burger" class:open={$isOpen}>
-			<div class="burger-line line1"></div>
-			<div class="burger-line line2"></div>
-			<div class="burger-line line3"></div>
+		<button class="" onclick={toggleMenu} aria-label="Toggle menu">
+			<div class="burger" class:open={$isOpen}>
+				<div class="burger-line line1"></div>
+				<div class="burger-line line2"></div>
+				<div class="burger-line line3"></div>
+			</div>
+		</button>
+
+		<div class="dropdown" class:open={$isOpen}>
+			<h2 class="text-center font-bold">Choose Game:</h2>
+			<button class="flex gap-1" onclick={() => handleNavButtonClick('blind')}
+				><EyeOff /><span>Blind</span></button
+			>
+			<button class="flex gap-1" onclick={() => handleNavButtonClick('emote')}
+				><Smile /><span>Emote</span></button
+			>
+			<button class="flex gap-1" onclick={() => handleNavButtonClick('survivor')}
+				><Footprints /><span>Survivor Perk</span></button
+			>
+			<button class="flex gap-1" onclick={() => handleNavButtonClick('killer')}
+				><Skull /><span>Killer Perk</span></button
+			>
+			<button class="flex gap-1" onclick={() => handleNavButtonClick('terror')}
+				><Music4 /><span>Terror</span></button
+			>
 		</div>
-	</button>
-
-	<div class="dropdown" class:open={$isOpen}>
-		<h2 class="text-center font-bold">Choose Game:</h2>
-		<button class="flex gap-1" onclick={() => handleNavButtonClick('blind')}
-			><EyeOff /><span>Blind</span></button
-		>
-		<button class="flex gap-1" onclick={() => handleNavButtonClick('emote')}
-			><Smile /><span>Emote</span></button
-		>
-		<button class="flex gap-1" onclick={() => handleNavButtonClick('survivor')}
-			><Footprints /><span>Survivor Perk</span></button
-		>
-		<button class="flex gap-1" onclick={() => handleNavButtonClick('killer')}
-			><Skull /><span>Killer Perk</span></button
-		>
-		<button class="flex gap-1" onclick={() => handleNavButtonClick('terror')}
-			><Music4 /><span>Terror</span></button
+	</div>
+	<div class="flex h-14 w-1/3 items-center justify-center px-4">
+		<button
+			onclick={handleButton}
+			class="h-10 rounded p-2 transition duration-200"
+			class:active-nav={currentPath === '/' || currentPath.startsWith('/guess')}
+			>Guess by Daylight</button
 		>
 	</div>
 </nav>
@@ -126,5 +143,10 @@
 	.dropdown button:hover {
 		background-color: rgba(255, 255, 255, 0.1);
 		border-radius: 0.25rem;
+	}
+
+	button.active-nav {
+		background-color: #373737;
+		border-radius: 0.5rem;
 	}
 </style>
