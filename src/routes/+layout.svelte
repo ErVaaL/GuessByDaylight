@@ -71,5 +71,7 @@
 		top: 0;
 		left: 0;
 		right: 0;
+		backdrop-filter: blur(4px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 	}
 </style>

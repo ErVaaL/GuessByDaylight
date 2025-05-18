@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { KillerFromDb, PerkFromDb } from '$lib/types';
 	import { onDestroy, onMount } from 'svelte';
 
-	export let suggestionList: Array<{ name: string; altNames?: string[] }> = [];
+	export let suggestionList: Array<KillerFromDb | PerkFromDb> = [];
 	export let query: string;
 	export let onSelect: (name: string) => void;
 	export let inputRef: HTMLInputElement | null = null;
@@ -9,15 +10,23 @@
 
 	let resizeObserver: ResizeObserver;
 
+	function isKiller(item: KillerFromDb | PerkFromDb): item is KillerFromDb {
+		return 'portrait' in item;
+	}
+
 	$: suggestions =
 		query.trim().length === 0
 			? []
 			: suggestionList.filter((item) => {
 					const lower = query.toLowerCase();
-					return (
-						item.name.toLowerCase().includes(lower) ||
-						item.altNames?.some((alt: string) => alt.toLowerCase().includes(lower))
-					);
+
+					const nameMatch = item.name.toLowerCase().includes(lower);
+
+					const altMatch = isKiller(item)
+						? item.altNames?.some((alt) => alt.toLowerCase().includes(lower))
+						: false;
+
+					return nameMatch || altMatch;
 				});
 
 	function updateAvailableHeight() {
@@ -75,13 +84,19 @@
 					class="h-full w-full cursor-pointer rounded-lg bg-gray-600 p-2 text-left hover:bg-gray-800"
 					on:click={() => onSelect(item.name)}
 				>
-					<span class="text-white">
-						{#each highlightMatch(item.name) as { char, match }, i (i)}
-							<span class={match ? 'text-yellow-400' : ''}>
-								{char}
-							</span>
-						{/each}
-					</span>
+					<div class="flex items-center gap-x-2 font-semibold">
+						{#if isKiller(item)}
+							<img src={item.portrait} alt="" class="h-12 w-12 rounded-full border bg-black" />
+						{/if}
+
+						<span class="text-white">
+							{#each highlightMatch(item.name) as { char, match }, i (i)}
+								<span class={match ? 'text-yellow-400' : ''}>
+									{char}
+								</span>
+							{/each}
+						</span>
+					</div>
 				</button>
 			{/each}
 		</div>
