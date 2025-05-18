@@ -31,9 +31,25 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Guess by Daylight</title>
+	<link rel="icon" href="/favicon.jpg" />
+	<meta name="description" content="A fan-made Dead by Daylight guessing game." />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<meta property="og:title" content="Guess by Daylight" />
+	<meta
+		property="og:description"
+		content="Can you guess the killer or perk from Dead by Daylight?"
+	/>
+	<meta name="author" content="ErVaL" />
+	<meta name="keywords" content="dead by daylight, guessing game, dbd, perks, killers" />
+</svelte:head>
+
 <div
 	class="flex h-full min-h-screen flex-col bg-black font-sans text-white"
-	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center; background-attachment: fixed;"
+	style="background-image: url('https://vjqeedywtzxnglyznele.supabase.co/storage/v1/object/public/images/misc/dbd-background.png'); background-size: cover; background-position: center; background-attachment: fixed;"
 >
 	<div class="h-14" class:hidden={!isFloating}></div>
 	<header
@@ -63,7 +79,7 @@
 			No affiliation or endorsement is implied.
 		</p>
 		<div class="flex w-full">
-			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.0</div>
+			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.0.1</div>
 			<div class="flex-end w-min self-end px-2 pb-2 text-right font-bold text-white">
 				<a
 					href="https://github.com/ErVaaL/GuessByDaylight"
