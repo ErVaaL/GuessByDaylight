@@ -7,6 +7,7 @@
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import type { PageProps } from './$types';
+	import CorrectPortrait from '../../../components/universal/CorrectPortrait.svelte';
 
 	const perkEndpoint = `${ENDPOINTS.BASE_GUESS}/perk-survivor`;
 
@@ -30,10 +31,10 @@
 	{#if !$hasCompletedToday && !onDoneReveal}
 		<GuessingInput list={$excludedPerks} {submitGuess} />
 	{:else}
-		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+		<CorrectPortrait guessed={$guesses[0].guess} owners={data.survivors} />
 		<GoNext location="/guess/perk-killer" />
 	{/if}
-	<div class="flex flex-col-reverse my-2 gap-y-1">
+	<div class="my-2 flex flex-col-reverse gap-y-1">
 		{#each $guesses as guess (guess.name)}
 			<StandardGuessResult
 				serverResponse={guess}

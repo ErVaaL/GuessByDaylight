@@ -9,6 +9,7 @@
 	import type { BlindKillerResponse } from '$lib/types';
 	import type { PageProps } from './$types';
 	import ScratchMarkLoader from '../../../components/ui/ScratchMarkLoader.svelte';
+	import CorrectPortrait from '../../../components/universal/CorrectPortrait.svelte';
 
 	const blindGuessEndpoint = `${ENDPOINTS.BASE_GUESS}/blind`;
 
@@ -43,13 +44,13 @@
 </script>
 
 <h1 class="p-4 text-center text-2xl font-bold">Guess the killer</h1>
-<div class="flex h-24 flex-col items-center">
+<div class="flex h-min flex-col items-center">
 	{#if $loading}
 		<ScratchMarkLoader />
 	{:else if !isCorrect && !$hasCompletedToday}
 		<GuessingInput list={$excludedKillers} {submitGuess} />
 	{:else if revealDone || $hasCompletedToday}
-		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+		<CorrectPortrait guessed={$guesses[0].guess} owners={data.killers} />
 		<GoNext location="/guess/emotes" />
 	{/if}
 </div>
@@ -62,7 +63,7 @@
 			{/each}
 		</tr>
 	</thead>
-	<tbody class="overflow-scroll table-auto">
+	<tbody class="table-auto overflow-scroll">
 		{#each $guesses as guess (guess.guess)}
 			<BlindGuessResult
 				guessed={guess.guess.id}

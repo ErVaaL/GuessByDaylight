@@ -8,6 +8,7 @@
 	import StandardGuessResult from '../../../components/universal/StandardGuessResult.svelte';
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
+	import CorrectPortrait from '../../../components/universal/CorrectPortrait.svelte';
 
 	const accessTerror = `${ENDPOINTS.BASE_GUESS}/terror`;
 
@@ -135,10 +136,10 @@
 {#if !$hasCompletedToday && !revealDone}
 	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else}
-	<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+	<CorrectPortrait guessed={$guesses[0].guess} owners={data.killers} />
 	<GoNext location="/" text="Finish" />
 {/if}
-<div class="flex flex-col-reverse my-2 gap-y-2">
+<div class="my-2 flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
 		<StandardGuessResult
 			serverResponse={guess}

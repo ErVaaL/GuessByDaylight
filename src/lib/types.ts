@@ -51,6 +51,12 @@ export type PerkFromDb = {
 	killer_id?: string;
 };
 
+export type SurvivorFromDb = {
+	id: string;
+	name: string;
+	portrait: string;
+};
+
 export type StandardResponse = {
 	name: string;
 	guess: KillerFromDb;

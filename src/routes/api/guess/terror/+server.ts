@@ -41,7 +41,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const result = {
 		name: guessedKiller.name,
-		guess: guessedKiller.id,
+		guess: guessedKiller,
 		isCorrect: guessedKiller.id === correct.id,
 	};
 

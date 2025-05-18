@@ -8,6 +8,7 @@
 	import GoNext from '../../../components/universal/GoNext.svelte';
 	import type { PageProps } from './$types';
 	import ScratchMarkLoader from '../../../components/ui/ScratchMarkLoader.svelte';
+	import CorrectPortrait from '../../../components/universal/CorrectPortrait.svelte';
 
 	const accessEmotes = `${ENDPOINTS.BASE_GUESS}/emotes`;
 
@@ -56,17 +57,17 @@
 		</div>
 	{/each}
 </div>
-<div class="flex h-24 flex-col items-center">
+<div class="flex h-min flex-col items-center">
 	{#if $loading}
 		<ScratchMarkLoader />
 	{:else if !$hasCompletedToday}
 		<GuessingInput list={$excludedKillers} {submitGuess} />
 	{:else if revealDone || $hasCompletedToday}
-		<p class="text-md font-bold text-green-500">Congratulations, you guessed right!</p>
+		<CorrectPortrait guessed={$guesses[0].guess} owners={data.killers} />
 		<GoNext location="/guess/perk-survivor" />
 	{/if}
 </div>
-<div class="flex flex-col-reverse my-2 gap-y-2">
+<div class="my-2 flex flex-col-reverse gap-y-2">
 	{#each $guesses as guess (guess.guess)}
 		<StandardGuessResult
 			serverResponse={guess}

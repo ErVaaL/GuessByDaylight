@@ -1,6 +1,6 @@
 import { initiateDailyAnswers } from '$lib/server/initiateDailyAnswers';
 import { supabaseServer } from '$lib/supabaseServer';
-import type { KillerFromDb, PerkFromDb } from '$lib/types';
+import type { KillerFromDb, PerkFromDb, SurvivorFromDb } from '$lib/types';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
@@ -10,12 +10,22 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 	}: { data: KillerFromDb[] | null; error: Error | null } = await supabaseServer
 		.from('Killers')
 		.select('*');
+
 	const { data: perks, error: perksError }: { data: PerkFromDb[] | null; error: Error | null } =
 		await supabaseServer.from('Perks').select('*');
+
+	const {
+		data: survivors,
+		error: survivorsError,
+	}: { data: SurvivorFromDb[] | null; error: Error | null } = await supabaseServer
+		.from('Survivors')
+		.select('*');
 
 	if (killersError || !killers)
 		throw new Error(`Failed to fetch killers: ${killersError?.message}`);
 	if (perksError || !perks) throw new Error(`Failed to fetch perks: ${perksError?.message}`);
+	if (survivorsError || !survivors)
+		throw new Error(`Failed to fetch survivors: ${survivorsError?.message}`);
 
 	const { dailyPick } = await initiateDailyAnswers();
 	const today = dailyPick.answers_date;
@@ -30,6 +40,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 
 	return {
 		killers: killers,
+    survivors: survivors,
 		perks: perks,
 		today,
 	};
