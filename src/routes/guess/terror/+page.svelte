@@ -136,7 +136,7 @@
 {#if !$hasCompletedToday && !revealDone}
 	<GuessingInput list={$excludedKillers} {submitGuess} />
 {:else}
-	<CorrectPortrait guessed={$guesses[0].guess} owners={data.killers} />
+	<CorrectPortrait guessed={$guesses[$guesses.length - 1].guess} owners={data.killers} />
 	<GoNext location="/" text="Finish" />
 {/if}
 <div class="my-2 flex flex-col-reverse gap-y-2">

@@ -50,7 +50,7 @@
 	{:else if !isCorrect && !$hasCompletedToday}
 		<GuessingInput list={$excludedKillers} {submitGuess} />
 	{:else if revealDone || $hasCompletedToday}
-		<CorrectPortrait guessed={$guesses[0].guess} owners={data.killers} />
+		<CorrectPortrait guessed={$guesses[$guesses.length - 1].guess} owners={data.killers} />
 		<GoNext location="/guess/emotes" />
 	{/if}
 </div>

@@ -31,7 +31,7 @@
 	{#if !$hasCompletedToday && !onDoneReveal}
 		<GuessingInput list={$excludedPerks} {submitGuess} />
 	{:else}
-		<CorrectPortrait guessed={$guesses[0].guess} owners={data.survivors} />
+		<CorrectPortrait guessed={$guesses[$guesses.length - 1].guess} owners={data.survivors} />
 		<GoNext location="/guess/perk-killer" />
 	{/if}
 	<div class="my-2 flex flex-col-reverse gap-y-1">
