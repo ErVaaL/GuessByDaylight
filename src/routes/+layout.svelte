@@ -3,6 +3,7 @@
 	import '../app.css';
 	import TimerTillReset from '../components/universal/TimerTillReset.svelte';
 	import { cleanLocalStorage } from '$lib/utils/cleanLocalStorage';
+	import Navbar from '../components/layout/Navbar.svelte';
 
 	let { children, data } = $props();
 
@@ -16,8 +17,13 @@
 
 <div
 	class="flex h-full min-h-screen flex-col bg-black font-sans text-white"
-	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center;"
+	style="background-image: url('/images/dbd-background.webp'); background-size: cover; background-position: center; background-attachment: fixed;"
 >
+	<header
+		class="relative flex h-14 items-center gap-x-4 border-b border-gray-800 bg-[rgba(0,0,0,0.7)] p-2 text-white"
+	>
+		<Navbar />
+	</header>
 	<div class="flex h-full grow justify-center">
 		<div class="flex w-4xl flex-col items-center gap-y-8 bg-[rgba(0,0,0,0.7)]">
 			<h1 class="mt-2 px-4 text-center text-3xl font-bold">Guess by Daylight</h1>
