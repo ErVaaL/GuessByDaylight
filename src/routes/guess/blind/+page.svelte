@@ -40,6 +40,12 @@
 	$effect(() => {
 		isCorrect = $guesses.some((g) => g.isCorrect);
 		loading.set(false);
+
+		if (revealDone) {
+			setTimeout(() => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}, 0);
+		}
 	});
 </script>
 
@@ -64,13 +70,16 @@
 		</tr>
 	</thead>
 	<tbody class="table-auto overflow-scroll">
-		{#each $guesses as guess (guess.guess)}
+		{#each $guesses as guess, i (guess.guess)}
 			<BlindGuessResult
 				guessed={guess.guess.id}
 				serverResponse={guess as BlindKillerResponse}
 				killers={data.killers}
 				onDoneReveal={() => {
-					revealDone = true;
+					if (i === $guesses.length - 1) {
+						revealDone = true;
+						window.scrollTo({ top: 0, behavior: 'smooth' });
+					}
 				}}
 			/>
 		{/each}
