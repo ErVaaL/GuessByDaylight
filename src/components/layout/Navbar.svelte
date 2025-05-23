@@ -85,10 +85,16 @@
 	<div class="flex h-14 w-1/3 items-center justify-center px-4">
 		<button
 			onclick={handleButton}
-			class="h-10 rounded p-2 transition duration-200"
+			class="h-10 w-1/2 rounded p-2 transition duration-200 cursor-pointer"
 			class:active-nav={currentPath === '/' || currentPath.startsWith('/guess')}
 			>Guess by Daylight</button
 		>
+		<button
+			class="h-10 w-1/2 rounded p-2 transition duration-200 cursor-pointer"
+			onclick={() => goto('/roulette')}
+			class:active-nav={currentPath.startsWith('/roulette')}
+			>Perk Roulette
+		</button>
 	</div>
 </nav>
 
