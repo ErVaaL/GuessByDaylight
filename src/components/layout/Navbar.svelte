@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { EyeOff, Footprints, Home, Music4, Skull, Smile } from 'lucide-svelte';
+	import { Dice6, Dices, EyeOff, Footprints, Home, Music4, Skull, Smile } from 'lucide-svelte';
 	import { writable } from 'svelte/store';
 
 	const isOpen = writable(false);
@@ -64,7 +64,9 @@
 		</button>
 
 		<div class="dropdown" class:open={$isOpen}>
+			<span class="burger-line my-2"></span>
 			<h2 class="text-center font-bold">Choose Game:</h2>
+			<span class="burger-line my-2"></span>
 			<button class="flex gap-1" onclick={() => handleNavButtonClick('blind')}
 				><EyeOff /><span>Blind</span></button
 			>
@@ -80,17 +82,21 @@
 			<button class="flex gap-1" onclick={() => handleNavButtonClick('terror')}
 				><Music4 /><span>Terror</span></button
 			>
+			<span class="burger-line my-2"></span>
+			<h2 class="text-center font-bold">Other:</h2>
+			<span class="burger-line my-2"></span>
+			<button class="flex gap-1" onclick={() => goto('/roulette')}><Dices />Perk Roulette</button>
 		</div>
 	</div>
 	<div class="flex h-14 w-1/3 items-center justify-center px-4">
 		<button
 			onclick={handleButton}
-			class="h-10 w-1/2 rounded p-2 transition duration-200 cursor-pointer"
+			class="h-10 w-1/2 cursor-pointer rounded p-2 transition duration-200"
 			class:active-nav={currentPath === '/' || currentPath.startsWith('/guess')}
 			>Guess by Daylight</button
 		>
 		<button
-			class="h-10 w-1/2 rounded p-2 transition duration-200 cursor-pointer"
+			class="h-10 w-1/2 cursor-pointer rounded p-2 transition duration-200"
 			onclick={() => goto('/roulette')}
 			class:active-nav={currentPath.startsWith('/roulette')}
 			>Perk Roulette
@@ -157,7 +163,7 @@
 	}
 
 	button.active-nav {
-		background-color: #373737;
+		background-color: #373737b5;
 		border-radius: 0.5rem;
 	}
 </style>
