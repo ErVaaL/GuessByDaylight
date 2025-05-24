@@ -1,9 +1,28 @@
 # Guess By Daylight
-v1.0
+v1.1
 
 ## About
-This is a small web browser wordle like game that is themed on game Dead by Daylight.
-Will be working on adding more features and improving the game.
+Guess By Daylight is a web-based guessing game inspired by the popular game Dead by Daylight. 
+The game allows players to guess various aspects of the game, such as killer perks, survivor perks, emotes, and more.
+It features a daily challenge that resets every 24 hours, providing players with new content to enjoy.
+
+Additionally, recently added is perk roulette, where you can draw random perks for both killer and survivor.
+The roulette allows to draw up to 5 sets 4 perks each, and you can choose to draw either killer or survivor perks.
+
+Quick guide:
+1. Big red button - draws all active perk sets
+2. Small red button in the middle of the set - draws only that set
+3. SHIFT + click on one of the perks - draws only that perk
+4. "+" and "-" buttons in a set - choose how many perks to draw in that set (min 1, max 4)
+5. "Mouse" and "Skull" buttons - choose whether to draw survivor or killer perks
+6. "+" and "-" buttons above big red button - choose how many sets to draw (min 1, max 5)
+
+Will be working on adding more features and improving the app.
+
+## Stack
+- **Frontend**: Svelte, SvelteKit, TypeScript, Tailwind CSS, Vite
+- **Backend**: SvelteKit (server-side)
+- **Database**: Supabase (PostgreSQL)
 
 ## Getting started
 

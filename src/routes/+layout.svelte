@@ -72,7 +72,7 @@
 			No affiliation or endorsement is implied.
 		</p>
 		<div class="flex w-full">
-			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.0.1</div>
+			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.1</div>
 			<div class="flex-end w-min self-end px-2 pb-2 text-right font-bold text-white">
 				<a
 					href="https://github.com/ErVaaL/GuessByDaylight"
