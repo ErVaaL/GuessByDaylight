@@ -20,7 +20,6 @@
 				placeholder="Enter your guess"
 				class="my-4 h-10 w-64 rounded-lg bg-gray-600 p-2 text-white"
 				on:focus={() => (showSuggestions = true)}
-				on:blur={() => setTimeout(() => (showSuggestions = false), 100)}
 			/>
 			{#if showSuggestions}
 				<SuggestionList
