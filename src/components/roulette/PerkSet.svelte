@@ -74,7 +74,7 @@
 	</button>
 	<div class="flex place-self-center">
 		<button
-			class="hover:bg-from-red-600 focus:outsine-none rounded-full border-4 border-red-900 bg-gradient-to-r from-red-500 to-red-700 p-2 transition-colors duration-200 hover:cursor-pointer hover:border-red-700 hover:to-red-800"
+			class="hover:bg-from-red-600 focus:outline-none rounded-full border-4 border-red-900 bg-gradient-to-r from-red-500 to-red-700 p-2 transition-colors duration-200 hover:cursor-pointer hover:border-red-700 hover:to-red-800"
 			title="Draw perks for this set"
 			onclick={drawPerks}><img src={repeat} alt="" class="h-6 w-6" /></button
 		>

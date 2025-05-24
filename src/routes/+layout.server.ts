@@ -21,13 +21,15 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 		.from('Survivors')
 		.select('*');
 
-	if (killersError || !killers) console.error(`Error fetching killers: ${killersError?.message}`);
-	// throw new Error(`Failed to fetch killers: ${killersError?.message}`);
-	if (perksError || !perks) console.error(`Error fetching perks: ${perksError?.message}`);
-	// throw new Error(`Failed to fetch perks: ${perksError?.message}`);
+	if (killersError || !killers)
+		/* console.error(`Error fetching killers: ${killersError?.message}`); */
+		throw new Error(`Failed to fetch killers: ${killersError?.message}`);
+	if (perksError || !perks)
+		/* console.error(`Error fetching perks: ${perksError?.message}`); */
+		throw new Error(`Failed to fetch perks: ${perksError?.message}`);
 	if (survivorsError || !survivors)
-		console.error(`Error fetching surviviors: ${survivorsError?.message}`);
-	// throw new Error(`Failed to fetch survivors: ${survivorsError?.message}`);
+		/* console.error(`Error fetching surviviors: ${survivorsError?.message}`); */
+		throw new Error(`Failed to fetch survivors: ${survivorsError?.message}`);
 
 	const { dailyPick } = await initiateDailyAnswers();
 	const today = dailyPick.answers_date;

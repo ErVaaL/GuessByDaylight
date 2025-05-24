@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MinusCircle, PlusCircle, Repeat } from 'lucide-svelte';
+	import { MinusCircle, PlusCircle } from 'lucide-svelte';
 	import PerkSet from '../../components/roulette/PerkSet.svelte';
 
 	interface PerkSetComponent {
@@ -72,7 +72,7 @@
 					</button>
 				</div>
 				<button
-					class="hover:bg-from-red-600 focus:outsine-none flex h-20 w-40 items-center justify-center rounded-full border-4 border-red-900 bg-gradient-to-r from-red-500 to-red-700 p-4 text-2xl font-bold transition-colors duration-200 hover:cursor-pointer hover:border-red-700 hover:to-red-800"
+					class="hover:bg-from-red-600 focus:outline-none flex h-20 w-40 items-center justify-center rounded-full border-4 border-red-900 bg-gradient-to-r from-red-500 to-red-700 p-4 text-2xl font-bold transition-colors duration-200 hover:cursor-pointer hover:border-red-700 hover:to-red-800"
 					onclick={drawAllPerks}
 					title="Draw perks for all sets">DRAW</button
 				>
