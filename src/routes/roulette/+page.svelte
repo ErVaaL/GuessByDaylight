@@ -9,25 +9,25 @@
 	let { data } = $props();
 
 	let perkSets = $state(1);
-	let listPerkSets = $state([{ set: data.perks, styles: 'col-2 row-1' }]);
+	let listPerkSets = $state([{ set: data.perks, styles: 'col-1 row-2 md:col-2 md:row-1' }]);
 	let perkSetRefs = $state<Array<PerkSetComponent | null>>([]);
 
 	const addSet = () => {
 		switch (perkSets) {
 			case 1:
-				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-1' }];
+				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-3 md:col-1 md:row-2 lg:row-1' }];
 				perkSets++;
 				break;
 			case 2:
-				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-3 row-1' }];
+				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-4 md:col-2 md:row-2 lg:col-3 lg:row-1' }];
 				perkSets++;
 				break;
 			case 3:
-				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-2' }];
+				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-5 md:col-1 md:row-3 lg:row-2' }];
 				perkSets++;
 				break;
 			case 4:
-				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-3 row-2' }];
+				listPerkSets = [...listPerkSets, { set: data.perks, styles: 'col-1 row-6 md:col-2 md:row-3 lg:row-2 lg:col-3'  }];
 				perkSets++;
 				break;
 			default:
@@ -52,11 +52,11 @@
 <div class="flex h-full grow justify-center">
 	<div class="flex w-10/12 flex-col items-center bg-[rgba(0,0,0,0.7)]">
 		<h1 class="p-3 text-xl font-bold">Roll for random perks</h1>
-		<div class="grid grid-cols-3 grid-rows-2 place-items-center gap-8">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-6 md:grid-rows-3 lg:grid-rows-2 place-items-center gap-8 w-11/12 h-11/12">
 			{#each listPerkSets as set, i (i)}
 				<PerkSet styles={set.styles} perks={data.perks} bind:this={perkSetRefs[i]} />
 			{/each}
-			<div class="col-2 row-2 flex flex-col items-center justify-center">
+			<div class="col-1 row-1 md:col-1 md:row-1 lg:col-2 lg:row-2 flex flex-col items-center justify-center">
 				<div>
 					<button
 						onclick={removeSet}

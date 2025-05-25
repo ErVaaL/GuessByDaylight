@@ -22,14 +22,14 @@
 </script>
 
 <div
-	class="relative flex h-[7.5rem] w-[7.5rem] items-center justify-center"
+	class="relative flex h-[5.5rem] w-[5.5rem] items-center justify-center"
 	title={perk?.name ?? ''}
 >
 	<img src={disabled ? blankPerkBg : perkBg} alt="" class="perk-icon" />
 	<img
 		src={imageSrc}
 		alt=""
-		class={`absolute ${perk !== null ? 'h-26 w-26' : 'h-12 w-12'} ${imageLoaded ? '' : 'opacity-0'}`}
+		class={`absolute ${perk !== null ? 'h-20 w-20' : 'h-8 w-8'} ${imageLoaded ? '' : 'opacity-0'}`}
 		onload={() => (imageLoaded = true)}
 		in:scale={{ duration: 200 }}
 	/>
@@ -37,7 +37,7 @@
 
 <style>
 	.perk-icon {
-		height: 7.5rem;
-		width: 7.5rem;
+		height: 100%;
+		width: 100%;
 	}
 </style>
