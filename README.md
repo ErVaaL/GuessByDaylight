@@ -1,5 +1,5 @@
 # Guess By Daylight
-v1.1
+v1.2
 
 ## About
 Guess By Daylight is a web-based guessing game inspired by the popular game Dead by Daylight. 
@@ -14,8 +14,9 @@ Quick guide:
 2. Small red button in the middle of the set - draws only that set
 3. SHIFT + click on one of the perks - draws only that perk
 4. "+" and "-" buttons in a set - choose how many perks to draw in that set (min 1, max 4)
-5. "Mouse" and "Skull" buttons - choose whether to draw survivor or killer perks
-6. "+" and "-" buttons above big red button - choose how many sets to draw (min 1, max 5)
+5. "Lock" button sets how many perks will be excluded from the next draw (min 0, max 4)
+6. "Mouse" and "Skull" buttons - choose whether to draw survivor or killer perks
+7. "+" and "-" buttons above big red button - choose how many sets to draw (min 1, max 5)
 
 Will be working on adding more features and improving the app.
 
