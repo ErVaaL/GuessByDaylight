@@ -34,7 +34,6 @@
 	};
 
 	const drawUniquePerks = (perks: PerkFromDb[], slots: number): (PerkFromDb | null)[] => {
-		console.log(perks.length);
 		const shuffled = fisherYatesShuffle(perks);
 		const selected: (PerkFromDb | null)[] = shuffled.slice(0, slots);
 
