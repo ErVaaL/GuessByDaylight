@@ -3,6 +3,8 @@ WORKDIR /app
 COPY yarn.lock package.json ./
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 COPY . .
+COPY .env.docker .env
+
 RUN yarn build
 
 FROM node:23-alpine
