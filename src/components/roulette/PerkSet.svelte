@@ -3,6 +3,11 @@
 	import { Img } from 'flowbite-svelte';
 	import { MinusCircle, PlusCircle } from 'lucide-svelte';
 	import PerkIcon from './PerkIcon.svelte';
+	import { drawUniquePerksPure } from '$lib/utils/roulette/draw';
+	import {
+		addPerkSlot as computeAdd,
+		removePerkSlot as computeRemove,
+	} from '$lib/utils/roulette/perkSlots';
 
 	const { styles, perks } = $props();
 	const fullStyles = `${styles} w-64 aspect-square border-dotted border-2 border-red-800 grid grid-cols-3 grid-rows-3 gap-0`;
@@ -27,17 +32,8 @@
 	let excludedPerks: (PerkFromDb | null)[] = $state([]);
 
 	const flipSide = () => (side = !side);
-	const addPerkSlot = () => (perkSlots < 4 ? perkSlots++ : null);
-	const removePerkSlot = () => (perkSlots > 1 ? perkSlots-- : null);
-
-	const fisherYatesShuffle = <T,>(a: T[]): T[] => {
-		const result = [...a];
-		for (let i = result.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[result[i], result[j]] = [result[j], result[i]];
-		}
-		return result;
-	};
+	const addPerkSlot = () => (perkSlots = computeAdd(perkSlots));
+	const removePerkSlot = () => (perkSlots = computeRemove(perkSlots));
 
 	const updateExcludedPools = () => {
 		excludedSurvivorPerks = survivorPerks.filter(
@@ -47,17 +43,9 @@
 	};
 
 	const drawUniquePerks = (perks: PerkFromDb[], slots: number): (PerkFromDb | null)[] => {
-		const shuffled = fisherYatesShuffle(perks);
-		const selected: (PerkFromDb | null)[] = shuffled.slice(0, slots);
-
-		if (excludePerksCount > 0) {
-			for (let i = 0; i < excludePerksCount; i++) {
-				if (selected[i] !== null) excludedPerks = [...excludedPerks, selected[i]];
-			}
-		}
+		const { selected, excluded } = drawUniquePerksPure(perks, slots, excludePerksCount);
+		excludedPerks = [...excludedPerks, ...excluded];
 		updateExcludedPools();
-
-		while (selected.length < slots) selected.push(null);
 
 		return selected;
 	};

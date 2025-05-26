@@ -33,3 +33,5 @@ supabase/.env
 supabase/functions/**/dist/
 supabase/functions/**/build/
 supabase/functions/**/.output/
+coverage
+html
