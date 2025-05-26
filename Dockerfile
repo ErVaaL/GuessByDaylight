@@ -1,4 +1,4 @@
-FROM node:23-alpine AS builder
+FROM node:20-alpine AS builder
 ARG SUPABASE_URL
 ARG SUPABASE_SERVICE_ROLE_KEY
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN yarn build
 
-FROM node:23-alpine
+FROM node:20-alpine
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 EXPOSE 3000
