@@ -14,6 +14,6 @@ RUN yarn build
 
 FROM node:20-alpine
 WORKDIR /app
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.svelte-kit/output /app/output
 EXPOSE 3000
 CMD ["yarn", "preview", "--port", "3000"]
