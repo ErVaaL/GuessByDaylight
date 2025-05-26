@@ -1,6 +1,14 @@
 FROM node:23-alpine
 
 RUN apk add --no-cache git docker-cli curl jq
+
 RUN corepack enable && corepack prepare yarn@stable --activate
 
 WORKDIR /workspace
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+WORKDIR /workspace/app
+

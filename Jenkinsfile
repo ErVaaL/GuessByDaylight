@@ -70,8 +70,8 @@ pipeline {
   post {
     always {
       echo "Build success: $BUILD_TAG_VERSION"
-      sh 'docker rmi $BUILD_TAG_VERSION || true'
-      sh 'docker rmi $BUILD_TAG_LATEST || true'
+      sh "docker rmi ${env.BUILD_TAG_VERSION} || true"
+      sh "docker rmi ${env.BUILD_TAG_LATEST} || true"
     }
   }
 }
