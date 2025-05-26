@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'ervaal/custom-jenkins-build-agent:1.0.1'
+      image 'ervaal/custom-jenkins-build-agent:1.0.2'
       args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
@@ -16,6 +16,12 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
+      }
+    }
+
+    stage('Install Dependencies') {
+      steps {
+        sh 'yarn install --frozen-lockfile'
       }
     }
 
