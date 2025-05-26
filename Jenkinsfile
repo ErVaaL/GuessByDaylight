@@ -32,6 +32,10 @@ pipeline {
     }
 
     stage('Test & Coverage') {
+      environment {
+        VITE_SUPABASE_SERVICE_ROLE_KEY = 'dummy-key'
+        VITE_SUPABASE_URL = 'https://dummy.supabase.io'
+      }
       parallel {
         stage('Unit Tests') {
           steps {
