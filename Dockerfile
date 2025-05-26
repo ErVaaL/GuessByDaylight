@@ -1,9 +1,14 @@
 FROM node:23-alpine AS builder
+ARG SUPABASE_URL
+ARG SUPABASE_SERVICE_ROLE_KEY
+
+ENV VITE_SUPABASE_URL=$SUPABASE_URL
+ENV VITE_SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
+
 WORKDIR /app
 COPY yarn.lock package.json ./
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 COPY . .
-COPY .env.docker .env
 
 RUN yarn build
 

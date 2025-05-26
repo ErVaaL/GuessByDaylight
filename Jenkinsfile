@@ -58,9 +58,18 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        sh '''
-          docker build -t $BUILD_TAG_VERSION -t $BUILD_TAG_LATEST .
-        '''
+        withCredentials([
+          string(credentialsId: 'supabase-url', variable: 'SUPABASE_URL'),
+          string(credentialsId: 'supabase-key', variable: 'SUPABASE_KEY')
+        ]) {
+          sh '''
+            docker build \
+              --build-arg SUPABASE_URL=$SUPABASE_URL \
+              --build-arg SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_KEY \
+              -t $BUILD_TAG_VERSION \
+              -t $BUILD_TAG_LATEST .
+          '''
+        }
       }
     }
 
