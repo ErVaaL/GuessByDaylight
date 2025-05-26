@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { supabaseServer } from '$lib/supabaseServer';
 import type { KillerFromDb, PerkFromDb } from '$lib/types';
 import type { PostgrestError } from '@supabase/supabase-js';
@@ -5,6 +6,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 const answerCache: Record<string, { date: string; answer: KillerFromDb | PerkFromDb }> = {};
 
 async function getAnswer(game: string, answerId: string): Promise<KillerFromDb | PerkFromDb> {
+	if (!browser) return Promise.reject(new Error('This function can only be called in the browser'));
 	if (game === 'perk-survivor' || game === 'perk-killer') {
 		const { data: perk, error } = await supabaseServer
 			.from('Perks')
