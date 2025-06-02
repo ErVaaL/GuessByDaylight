@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'ervaal/custom-jenkins-build-agent:1.0.3'
-      args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+      args '-u root --network ci -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
 
