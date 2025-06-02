@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'ervaal/custom-jenkins-build-agent:1.0.3'
-      args '-u root --network ci -v /var/run/docker.sock:/var/run/docker.sock'
+      args '-u root --network guessbydaylight_ci -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
 
@@ -105,10 +105,15 @@ pipeline {
 
   post {
     always {
-      echo "Build success: $BUILD_TAG_VERSION"
-      sh "docker rmi ${env.BUILD_TAG_VERSION} || true"
-      sh "docker rmi ${env.BUILD_TAG_LATEST} || true"
+      script {
+        def tagVersion = env.BUILD_TAG_VERSION ?: 'unknown'
+        def tagLatest = env.BUILD_TAG_LATEST ?: 'unknown'
+        echo "Build success: ${tagVersion}"
+        sh "docker rmi ${tagVersion} || true"
+        sh "docker rmi ${tagLatest} || true"
+      }
     }
   }
+
 }
 
