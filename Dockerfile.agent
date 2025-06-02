@@ -1,8 +1,10 @@
 FROM node:23-alpine
 
-RUN apk add --no-cache git docker-cli curl jq
+RUN apk add --no-cache git docker-cli curl jq bash
 
 RUN corepack enable && corepack prepare yarn@stable --activate
+
+RUN npm install -g sonar-scanner
 
 WORKDIR /workspace
 
