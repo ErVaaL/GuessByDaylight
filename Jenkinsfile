@@ -11,6 +11,7 @@ pipeline {
     BUILD_TAG_LATEST = "${IMAGE_NAME}:latest"
     BUILD_TAG_VERSION = "${IMAGE_NAME}:${BUILD_NUMBER}"
     SONARQUBE_ENVIRONMENT = 'SonarQube'
+    SONAR_TOKEN = credentials('sonar-token')
   }
 
   stages {
@@ -60,7 +61,7 @@ pipeline {
     stage('SonarQube Analysis') {
       steps {
         withSonarQubeEnv("${SONARQUBE_ENVIRONMENT}") {
-          sh 'npx sonar-scanner'
+          sh 'npx sonar-scanner -Dsonar.login=$SONAR_TOKEN'
         }
       }
     }
