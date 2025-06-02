@@ -30,4 +30,4 @@ volumes:
   jenkins_home:
 
 networks:
-  ci:
+  ci: {}
