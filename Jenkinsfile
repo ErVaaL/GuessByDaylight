@@ -10,6 +10,7 @@ pipeline {
     IMAGE_NAME = 'ervaal/guessbydaylight'
     BUILD_TAG_LATEST = "${IMAGE_NAME}:latest"
     BUILD_TAG_VERSION = "${IMAGE_NAME}:${BUILD_NUMBER}"
+    SONARQUBE_ENVIRONMENT = 'SonarQube'
   }
 
   stages {
@@ -53,6 +54,22 @@ pipeline {
     stage('Archive Coverage') {
       steps {
         archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+        withSonarQubeEnv("${SONARQUBE_ENVIRONMENT}") {
+          sh 'npx sonar-scanner'
+        }
+      }
+    }
+
+    stage('SonarQube Quality Gate') {
+      steps {
+        timeout(time: 1, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
       }
     }
 
