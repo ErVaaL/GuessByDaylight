@@ -27,7 +27,8 @@
 	<img
 		src={perk.icon}
 		alt=""
-		class="absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2"
+		draggable="false"
+		class="absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 select-none"
 		style="filter: blur({blurAmount}px); transform: rotate({tiltAngle}deg); transition: all 0.3s ease;"
 	/>
 </div>
