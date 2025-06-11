@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PerkFromDb } from '$lib/types';
-	import { Img } from 'flowbite-svelte';
 	import { MinusCircle, PlusCircle } from 'lucide-svelte';
 	import PerkIcon from './PerkIcon.svelte';
 
@@ -129,9 +128,9 @@
 			onclick={flipSide}
 		>
 			{#if side}
-				<Img src={skull} alt="K" class="max-w-8" />
+				<img src={skull} alt="K" class="max-w-8" />
 			{:else}
-				<Img src={mouse} alt="S" class="max-w-8" />
+				<img src={mouse} alt="S" class="max-w-8" />
 			{/if}
 		</button>
 	</div>
