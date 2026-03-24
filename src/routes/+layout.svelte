@@ -71,6 +71,7 @@
 			<strong>Behaviour Interactive Inc.</strong>.<br />
 			No affiliation or endorsement is implied.
 		</p>
+        <p class="text-red-500 text-xl">THE SITE WILL DEACTIVATE BY 30.04.2026!!!</p>
 		<div class="flex w-full">
 			<div class="grow px-2 pb-2 text-left font-bold text-gray-200">version: 1.2.1</div>
 			<div class="flex-end w-min self-end px-2 pb-2 text-right font-bold text-white">
